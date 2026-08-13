@@ -3,6 +3,11 @@
   command = "npm run build"
   publish = "dist"
 
+# Env-змінні для build (також можна задати в Netlify Dashboard — вони мають пріоритет).
+[build.environment]
+  FACEBOOK_URL = "https://www.facebook.com/alekssamart"
+  INSTAGRAM_URL = "https://www.instagram.com/aleks_sam_art"
+
 # `uk` живе на корені `/` без префікса — старі/прямі заходи на `/uk/...` перенаправляємо на корінь.
 [[redirects]]
   from = "/uk/*"
