@@ -1,0 +1,42 @@
+---
+import { LOCALES, LOCALE_NAMES, type Locale } from '../i18n';
+import type { Dictionary } from '../i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+
+interface Props {
+  currentLang: Locale;
+  t: Dictionary;
+}
+
+const { currentLang, t } = Astro.props;
+---
+
+<!--
+  Перемикач мови. Клік ставить куку `lang` — вона відключає автовибір мови
+  за Accept-Language (див. скрипт у BaseLayout), щоб не «перемикало» користувача назад.
+-->
+<nav class="lang-switcher" aria-label={t.langSwitcher.label} data-lang-switcher>
+  {LOCALES.map((locale) => (
+    <a
+      href={getRelativeLocaleUrl(locale)}
+      hreflang={locale}
+      title={LOCALE_NAMES[locale]}
+      data-lang={locale}
+      aria-current={locale === currentLang ? 'true' : undefined}
+    >
+      {locale}
+    </a>
+  ))}
+</nav>
+
+<script>
+  const switcher = document.querySelector<HTMLElement>('[data-lang-switcher]');
+  switcher?.addEventListener('click', (event) => {
+    const target = event.target as HTMLElement | null;
+    const link = target?.closest<HTMLAnchorElement>('a[data-lang]');
+    const lang = link?.dataset.lang;
+    if (!lang) return;
+    // Запам'ятовуємо вибір на рік, щоб автовибір не перенаправляв користувача назад.
+    document.cookie = `lang=${lang}; path=/; max-age=31536000; samesite=lax`;
+  });
+</script>

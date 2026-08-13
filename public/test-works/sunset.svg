@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7a3a2e"/>
+      <stop offset="0.5" stop-color="#c96a3a"/>
+      <stop offset="1" stop-color="#4e1f3a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <circle cx="600" cy="520" r="170" fill="#ffd9a0" opacity="0.85"/>
+  <path d="M0 700 Q 300 620 600 710 T 1200 680 L 1200 900 L 0 900 Z" fill="#1f0f2e" opacity="0.7"/>
+  <path d="M0 790 Q 400 700 800 800 T 1200 780 L 1200 900 L 0 900 Z" fill="#1f0f2e" opacity="0.9"/>
+  <text x="60" y="830" font-family="serif" font-size="60" fill="#f5f5f5" opacity="0.9">Захід сонця</text>
+</svg>

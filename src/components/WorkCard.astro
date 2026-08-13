@@ -1,0 +1,80 @@
+---
+/**
+ * Картка роботи на «стосі» — зображення (main) + назва + кнопки.
+ *
+ * Внутрішня структура (hooks для скриптів та етапу 5):
+ *  - `[data-card]`  — рамка з фото (GSAP анімує її: в'їзд/вихід зі стосу);
+ *  - `[data-stack]` — «стіс» позаду картки (2 підкладені картки, лише CSS);
+ *  - `[data-open-lightbox]` + `[data-work-index]` — тригер лайтбокса (етап 4):
+ *    клік/Enter/Space на рамці відкриває всі фото роботи (є лише коли є фото);
+ *  - `[data-order-button]` / `[data-buy-button]` — кнопки, модальні форми — етап 5.
+ *
+ * «Купити» показується лише для робіт із ціною в `ARTWORK_PRICES`
+ * (ключ — назва папки Drive = назва роботи). Поки мапа порожня — є лише «Замовити».
+ */
+import type { DriveWork } from '../lib/drive';
+import type { Dictionary } from '../i18n';
+import { ARTWORK_PRICES } from '../config/site';
+
+interface Props {
+  work: DriveWork;
+  t: Dictionary;
+  /** Індекс у списку: для eager-load першого зображення (LCP). */
+  index: number;
+}
+
+const { work, t, index } = Astro.props;
+const hasPrice = typeof ARTWORK_PRICES[work.name] === 'number';
+
+// Рамка — тригер лайтбокса лише коли є хоча б одне фото (головне або галерея).
+const hasPhotos = Boolean(work.mainImage) || work.gallery.length > 0;
+// Атрибути тригера: клік / Enter / Space відкриває лайтбокс (етап 4,
+// `src/lib/lightbox.ts` читає `data-work-index` = індекс роботи в списку).
+const openAttrs = hasPhotos
+  ? {
+      'data-open-lightbox': '',
+      'data-work-index': index,
+      role: 'button',
+      tabindex: 0,
+      'aria-haspopup': 'dialog',
+      'aria-label': t.lightbox.open.replace('{work}', work.name),
+    }
+  : {};
+---
+
+<article class="work-card" data-work-card>
+  <div class="work-card__stack" data-stack aria-hidden="true">
+    <div class="work-card__stack-item"></div>
+    <div class="work-card__stack-item"></div>
+  </div>
+
+  <div class="work-card__frame" data-card {...openAttrs}>
+    {work.mainImage ? (
+      <img
+        class="work-card__img"
+        src={work.mainImage}
+        alt={work.name}
+        loading={index === 0 ? 'eager' : 'lazy'}
+        decoding="async"
+      />
+    ) : (
+      <div class="work-card__placeholder">{work.name}</div>
+    )}
+  </div>
+
+  <div class="work-card__meta">
+    <h2 class="work-card__title">{work.name}</h2>
+    <div class="work-card__actions">
+      <!-- Модальна форма «Замовити» — етап 5 -->
+      <button type="button" class="btn btn--order" data-order-button>
+        {t.work.orderButton}
+      </button>
+      <!-- «Купити» лише коли є ціна готової роботи (src/config → ARTWORK_PRICES) -->
+      {hasPrice && (
+        <button type="button" class="btn btn--buy" data-buy-button>
+          {t.work.buyButton}
+        </button>
+      )}
+    </div>
+  </div>
+</article>

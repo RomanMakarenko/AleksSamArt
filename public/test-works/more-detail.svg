@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900">
+  <defs>
+    <linearGradient id="g" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f6e6e"/>
+      <stop offset="1" stop-color="#1d4a4e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="900" fill="url(#g)"/>
+  <ellipse cx="600" cy="480" rx="420" ry="160" fill="#ffffff14"/>
+  <ellipse cx="600" cy="480" rx="260" ry="90" fill="#ffffff1a"/>
+  <text x="60" y="830" font-family="serif" font-size="48" fill="#f5f5f5" opacity="0.7">Море · detail</text>
+</svg>

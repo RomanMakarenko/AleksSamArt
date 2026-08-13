@@ -1,0 +1,94 @@
+---
+/**
+ * Лайтбокс — повноекранний перегляд усіх фото роботи (етап 4).
+ *
+ * Рендериться один раз на сторінці (у `Home.astro`) і знає всі роботи:
+ * фото роботи = головне (`00-*`) + галерея (етапи `01-*`, ракурси `02-*`).
+ *
+ * Відкривається кліком / Enter / Space на рамці картки
+ * (`[data-open-lightbox]` у WorkCard, індекс роботи — `data-work-index`,
+ * збігається з порядком екранів). Керування: ←/→ — фото, Esc / клік поза
+ * зображенням / «×» — закрити. Під час перегляду скрол сторінки блокується,
+ * фокус повертається на картку після закриття.
+ *
+ * Клієнтська логіка — `src/lib/lightbox.ts` (підключена внизу).
+ */
+import type { DriveWork } from '../lib/drive';
+import type { Dictionary } from '../i18n';
+
+interface Props {
+  works: DriveWork[];
+  t: Dictionary;
+}
+
+const { works, t } = Astro.props;
+
+// Усі фото роботи для лайтбокса: головне + галерея (порожні прибираємо).
+// Порядок збігається з порядком екранів — клієнт відкриває за `data-work-index`.
+const worksData = works.map((w) => ({
+  name: w.name,
+  photos: [w.mainImage, ...w.gallery].filter((p): p is string => Boolean(p)),
+}));
+---
+
+<div
+  class="lightbox"
+  data-lightbox
+  role="dialog"
+  aria-modal="true"
+  aria-hidden="true"
+  data-counter-format={t.lightbox.counter}
+>
+  <!-- Кнопка закриття — на ній фокус після відкриття. -->
+  <button
+    type="button"
+    class="lightbox__close"
+    data-lightbox-close
+    aria-label={t.lightbox.close}
+  >
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  </button>
+
+  <!-- Сцена: фото + стрілки навігації (кнопки — керування мишею/клавіатурою). -->
+  <div class="lightbox__stage">
+    <img class="lightbox__img" data-lightbox-img alt="" />
+    <button
+      type="button"
+      class="lightbox__nav lightbox__nav--prev"
+      data-lightbox-prev
+      aria-label={t.lightbox.prev}
+    >
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M15 6l-6 6 6 6" />
+      </svg>
+    </button>
+    <button
+      type="button"
+      class="lightbox__nav lightbox__nav--next"
+      data-lightbox-next
+      aria-label={t.lightbox.next}
+    >
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M9 6l6 6-6 6" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Підпис: назва роботи + індекс фото («1 / 3»). -->
+  <div class="lightbox__caption">
+    <span class="lightbox__name" data-lightbox-name></span>
+    <span class="lightbox__counter" data-lightbox-counter></span>
+  </div>
+</div>
+
+<!--
+  Дані робіт для клієнтського скрипта (JSON). `<` екранується у `<`,
+  щоб жодне значення (назва роботи) не могло закрити тег <script>.
+-->
+<script is:inline type="application/json" set:html={JSON.stringify(worksData).replace(/</g, '\\u003c')} data-lightbox-data></script>
+
+<script>
+  import '../lib/lightbox';
+</script>

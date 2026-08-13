@@ -1,0 +1,2 @@
+# Netlify Functions (Google Drive): list-works тощо — етап 2.
+# Каталог підключений у netlify.toml: [functions] directory = "src/functions".

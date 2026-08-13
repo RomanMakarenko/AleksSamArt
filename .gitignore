@@ -1,0 +1,25 @@
+# build output
+dist/
+.output/
+
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# environment variables — секрети ніколи не в git (див. CLAUDE.md)
+.env
+.env.production
+
+# netlify
+.netlify/
+
+# macOS
+.DS_Store

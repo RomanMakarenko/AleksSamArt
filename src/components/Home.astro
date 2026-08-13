@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import WorkCard from './WorkCard.astro';
+import Lightbox from './Lightbox.astro';
+import { DICTIONARIES, type Locale } from '../i18n';
+import { SITE } from '../config/site';
+import { getWorksForBuild } from '../lib/works';
+
+interface Props {
+  lang: Locale;
+}
+
+const { lang } = Astro.props;
+const t = DICTIONARIES[lang];
+
+// Build-time вшивання списку робіт (SEO). З mock-режиму — тестові роботи,
+// з підключеного Drive — реальні. Формат `DriveWork` однаковий в обох режимах.
+const works = await getWorksForBuild();
+const hasWorks = works.length > 0;
+---
+
+<BaseLayout lang={lang} title={SITE.title} description={t.meta.description}>
+  <!--
+    Повноекранний вертикальний скрол: 1 екран = 1 робота (CSS scroll-snap у global.css).
+    Анімацію «стосу карток» (нахил/тінь/перспектива) та активну точку робить
+    клієнтський скрипт `src/lib/gallery.ts` (підключений внизу).
+  -->
+  <main class="gallery" data-gallery>
+    <!-- Інтро-екран: назва сайту, теглайн, перемикач мови -->
+    <section class="screen screen--intro">
+      <div class="hero" data-hero>
+        <h1>{SITE.title}</h1>
+        <p class="hero__tagline">{t.hero.tagline}</p>
+        <p class="hero__subtitle">{t.hero.subtitle}</p>
+        <LanguageSwitcher currentLang={lang} t={t} />
+        <div class="hero__scroll-hint" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1 екран = 1 робота. Клік на точці справа — перехід до екрана. -->
+    {hasWorks &&
+      works.map((work, i) => (
+        <section class="screen screen--work" data-work-screen>
+          <WorkCard work={work} t={t} index={i} />
+        </section>
+      ))}
+  </main>
+
+  <!-- Бічний скролінг-індикатор: точка на роботу, активна підсвічується скриптом. -->
+  {hasWorks && (
+    <nav class="dots" aria-label={t.dots.label} data-dots>
+      {works.map((work, i) => (
+        <button
+          type="button"
+          class="dots__dot"
+          data-dot={i}
+          aria-label={work.name}
+          title={work.name}
+        ></button>
+      ))}
+    </nav>
+  )}
+
+  <!--
+    Лайтбокс: клік на рамці картки відкриває всі фото роботи
+    (головне + етапи + ракурси). Тригери — `[data-open-lightbox]` у WorkCard.
+  -->
+  {hasWorks && <Lightbox works={works} t={t} />}
+
+  <!-- «Стоп карток» (GSAP + ScrollTrigger) + навігація точками -->
+  <script>
+    import '../lib/gallery';
+  </script>
+</BaseLayout>

@@ -1,0 +1,90 @@
+---
+import { DICTIONARIES, LOCALES, DEFAULT_LOCALE, type Locale } from '../i18n';
+import { SITE, SOCIAL_LINKS } from '../config/site';
+import '../styles/global.css';
+
+interface Props {
+  lang: Locale;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title = SITE.title, description } = Astro.props;
+const t = DICTIONARIES[lang];
+const metaDescription = description ?? t.meta.description;
+
+// Автовибір мови: виконується у <head> до рендеру контенту (без «блимання»).
+const detectScript = `
+(function () {
+  if (document.cookie.indexOf('lang=') !== -1) return;
+  if (window.location.pathname !== '/') return;
+  var supported = ${JSON.stringify(LOCALES)};
+  var wanted = (navigator.languages || [navigator.language || 'uk']).slice();
+  for (var i = 0; i < wanted.length; i++) {
+    var code = (wanted[i] || '').split('-')[0].toLowerCase();
+    if (supported.indexOf(code) !== -1) {
+      if (code !== 'uk') window.location.replace('/' + code + '/');
+      return;
+    }
+  }
+})();
+`;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={metaDescription} />
+    <!-- TODO(етап 6): meta/OG/hreflang -->
+
+    <!--
+      Автовибір мови за мовою браузера (Accept-Language), фолбек — `uk`.
+      Спрацьовує лише на корені `/` (перший візит) і лише якщо користувач
+      ще не обрав мову сам (кука `lang`, яку ставить перемикач).
+    -->
+    <script is:inline set:html={detectScript} />
+  </head>
+  <body>
+    <slot />
+    <!--
+      Персистентний футер поверх повноекранних екранів: соцмережі (з env
+      FACEBOOK_URL / INSTAGRAM_URL) + копірайт. Іконки з'являються, коли
+      відповідний URL задано в `src/config` (через astro:env).
+    -->
+    <footer class="site-footer">
+      {(SOCIAL_LINKS.facebook || SOCIAL_LINKS.instagram) && (
+        <div class="site-footer__socials">
+          {SOCIAL_LINKS.facebook && (
+            <a
+              class="site-footer__social"
+              href={SOCIAL_LINKS.facebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H5.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.78-3.9 1.09 0 2.24.2 2.24.2v2.46H13.2c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.45 2.9h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94z" />
+              </svg>
+            </a>
+          )}
+          {SOCIAL_LINKS.instagram && (
+            <a
+              class="site-footer__social"
+              href={SOCIAL_LINKS.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" />
+              </svg>
+            </a>
+          )}
+        </div>
+      )}
+      <span>© {new Date().getFullYear()} {SITE.title} · {t.footer.rights}</span>
+    </footer>
+  </body>
+</html>

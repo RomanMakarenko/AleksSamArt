@@ -1,0 +1,21 @@
+{
+  "name": "alekssamart",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "setup:google": "node scripts/setup-google.mjs",
+    "test:drive": "node --experimental-strip-types scripts/test-drive.mjs"
+  },
+  "dependencies": {
+    "astro": "^7.2.1",
+    "gsap": "^3.15.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.1.1"
+  }
+}

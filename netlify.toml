@@ -1,0 +1,18 @@
+# ── Деплой: Netlify (free) ─────────────────────────────────────────────
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Netlify Functions зберігаються в src/functions (як у структурі CLAUDE.md).
+# Netlify бандлить кожен файл і його імпорти (зокрема src/lib/drive.ts) окремо від Astro.
+[functions]
+  directory = "src/functions"
+  node_bundler = "esbuild"
+
+# `uk` живе на корені `/` без префікса — старі/прямі заходи на `/uk/...` перенаправляємо на корінь.
+[[redirects]]
+  from = "/uk/*"
+  to = "/:splat"
+  status = 301
+
+# TODO(етап 5): redirects для форми Netlify не потрібні — форма в статичному HTML.
