@@ -12,8 +12,7 @@ export default defineConfig({
     },
   },
 
-  // Env-змінні, які потрапляють у код із `astro:env`. Google-секрети (`GOOGLE_*`)
-  // сюди не потрапляють — вони читаються напряму в Netlify Function (етап 2).
+  // Env-змінні, які потрапляють у код із `astro:env`.
   env: {
     schema: {
       CURRENCY: envField.string({

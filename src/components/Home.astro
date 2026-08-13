@@ -14,8 +14,8 @@ interface Props {
 const { lang } = Astro.props;
 const t = DICTIONARIES[lang];
 
-// Build-time вшивання списку робіт (SEO). З mock-режиму — тестові роботи,
-// з підключеного Drive — реальні. Формат `DriveWork` однаковий в обох режимах.
+// Build-time вшивання списку робіт (SEO): локальні папки `src/assets/works/`,
+// зображення оптимізуються на build (`astro:assets`). Формат — `Work`.
 const works = await getWorksForBuild();
 const hasWorks = works.length > 0;
 ---

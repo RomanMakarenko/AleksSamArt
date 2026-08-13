@@ -10,14 +10,14 @@
  *  - `[data-order-button]` / `[data-buy-button]` — кнопки, модальні форми — етап 5.
  *
  * «Купити» показується лише для робіт із ціною в `ARTWORK_PRICES`
- * (ключ — назва папки Drive = назва роботи). Поки мапа порожня — є лише «Замовити».
+ * (ключ — назва папки роботи = назва роботи). Поки мапа порожня — є лише «Замовити».
  */
-import type { DriveWork } from '../lib/drive';
+import type { Work } from '../lib/works';
 import type { Dictionary } from '../i18n';
 import { ARTWORK_PRICES } from '../config/site';
 
 interface Props {
-  work: DriveWork;
+  work: Work;
   t: Dictionary;
   /** Індекс у списку: для eager-load першого зображення (LCP). */
   index: number;

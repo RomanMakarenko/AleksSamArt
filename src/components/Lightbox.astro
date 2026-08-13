@@ -3,7 +3,7 @@
  * Лайтбокс — повноекранний перегляд усіх фото роботи (етап 4).
  *
  * Рендериться один раз на сторінці (у `Home.astro`) і знає всі роботи:
- * фото роботи = головне (`00-*`) + галерея (етапи `01-*`, ракурси `02-*`).
+ * фото роботи = головне (`*-1.*`) + галерея (інші зображення папки).
  *
  * Відкривається кліком / Enter / Space на рамці картки
  * (`[data-open-lightbox]` у WorkCard, індекс роботи — `data-work-index`,
@@ -13,11 +13,11 @@
  *
  * Клієнтська логіка — `src/lib/lightbox.ts` (підключена внизу).
  */
-import type { DriveWork } from '../lib/drive';
+import type { Work } from '../lib/works';
 import type { Dictionary } from '../i18n';
 
 interface Props {
-  works: DriveWork[];
+  works: Work[];
   t: Dictionary;
 }
 

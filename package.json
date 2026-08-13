@@ -7,9 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "setup:google": "node scripts/setup-google.mjs",
-    "test:drive": "node --experimental-strip-types scripts/test-drive.mjs"
+    "astro": "astro"
   },
   "dependencies": {
     "astro": "^7.2.1",
