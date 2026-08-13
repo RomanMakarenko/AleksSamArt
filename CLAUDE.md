@@ -67,7 +67,7 @@ src/assets/works/
 
 | Змінна | Призначення |
 |---|---|
-| `CONTACT_EMAIL` | Email, на який приходять замовлення (Netlify Forms) |
+| `CONTACT_EMAIL` | ⚠️ Не керує доставкою замовлень — зарезервований на майбутнє (напр., mailto). Пошту отримувача задають у Dashboard → Forms → Form notifications |
 | `FACEBOOK_URL` | Посилання на Facebook |
 | `INSTAGRAM_URL` | Посилання на Instagram |
 | `CURRENCY` | Валюта цін. Дефолт — `USD` (умовні одиниці). Змінюється в один момент |
@@ -99,7 +99,7 @@ src/assets/works/
 Спільне:
 - **Назва поточної роботи підставляється у форму автоматично**.
 - Поля форми (мінімум): **ім'я, email**, розмір (для «Замовити»), **коментар**.
-- Надсилання — через **Netlify Forms**, замовлення приходить на `CONTACT_EMAIL` художника.
+- Надсилання — через **Netlify Forms**: Netlify зберігає замовлення в Dashboard (Forms → «order» → Submissions). **Email-сповіщення** налаштовуються окремо: Dashboard → Forms → «order» → **Form notifications** → Email notification (пошта отримувача задається там, **не** через `CONTACT_EMAIL`).
 - Після відправки — підтвердження успіху (спасибі).
 - Розмітка форми — у статичному HTML (Netlify виявляє форми на build).
 
