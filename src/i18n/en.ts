@@ -25,7 +25,7 @@ export const en: Dictionary = {
     rights: 'All rights reserved',
   },
   work: {
-    orderButton: 'Order',
+    orderButton: 'Order your own portrait',
     buyButton: 'Buy',
     soldBadge: 'Sold',
     orderBadge: 'Order',
@@ -48,7 +48,6 @@ export const en: Dictionary = {
     size: 'Size',
     comment: 'Comment',
     price: 'Price',
-    work: 'Work',
     customSize: 'Custom size',
     negotiablePrice: 'negotiable price',
     photo: 'Photo',

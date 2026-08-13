@@ -48,7 +48,6 @@ function init(): void {
   const modeInput = form.querySelector<HTMLInputElement>('[data-order-mode]')!;
   const priceInput = form.querySelector<HTMLInputElement>('[data-order-price]')!;
   const titleEl = modal.querySelector<HTMLElement>('[data-order-title-text]')!;
-  const workNameEl = modal.querySelector<HTMLElement>('[data-order-work-name]')!;
   const submitBtn = form.querySelector<HTMLButtonElement>('[data-order-submit]')!;
   const errorEl = form.querySelector<HTMLElement>('[data-order-error]')!;
   const successPanel = modal.querySelector<HTMLElement>('[data-order-success]')!;
@@ -104,7 +103,6 @@ function init(): void {
     buyPrice = price;
 
     titleEl.textContent = next === 'order' ? orderTitle : buyTitle;
-    workNameEl.textContent = workName;
     workInput.value = workName;
     modeInput.value = next;
     priceInput.value = '';

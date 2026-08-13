@@ -25,7 +25,7 @@ export const sv: Dictionary = {
     rights: 'Alla rättigheter förbehållna',
   },
   work: {
-    orderButton: 'Beställ',
+    orderButton: 'Beställ ditt eget porträtt',
     buyButton: 'Köp',
     soldBadge: 'Såld',
     orderBadge: 'Beställning',
@@ -48,7 +48,6 @@ export const sv: Dictionary = {
     size: 'Storlek',
     comment: 'Kommentar',
     price: 'Pris',
-    work: 'Verk',
     customSize: 'Egen storlek',
     negotiablePrice: 'pris enligt överenskommelse',
     photo: 'Foto',

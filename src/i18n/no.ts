@@ -25,7 +25,7 @@ export const no: Dictionary = {
     rights: 'Alle rettigheter forbeholdt',
   },
   work: {
-    orderButton: 'Bestill',
+    orderButton: 'Bestill ditt eget portrett',
     buyButton: 'Kjøp',
     soldBadge: 'Solgt',
     orderBadge: 'Bestilling',
@@ -48,7 +48,6 @@ export const no: Dictionary = {
     size: 'Størrelse',
     comment: 'Kommentar',
     price: 'Pris',
-    work: 'Verk',
     customSize: 'Egen størrelse',
     negotiablePrice: 'pris etter avtale',
     photo: 'Bilde',

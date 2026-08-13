@@ -25,7 +25,7 @@ export const uk: Dictionary = {
     rights: 'Всі права захищено',
   },
   work: {
-    orderButton: 'Замовити',
+    orderButton: 'Замовити власний портрет',
     buyButton: 'Купити',
     soldBadge: 'Продано',
     orderBadge: 'Замовлення',
@@ -48,7 +48,6 @@ export const uk: Dictionary = {
     size: 'Розмір',
     comment: 'Коментар',
     price: 'Ціна',
-    work: 'Робота',
     customSize: 'Свій розмір',
     negotiablePrice: 'ціна договірна',
     photo: 'Фото',

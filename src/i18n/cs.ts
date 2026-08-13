@@ -25,7 +25,7 @@ export const cs: Dictionary = {
     rights: 'Všechna práva vyhrazena',
   },
   work: {
-    orderButton: 'Objednat',
+    orderButton: 'Objednat vlastní portrét',
     buyButton: 'Koupit',
     soldBadge: 'Prodáno',
     orderBadge: 'Zakázka',
@@ -48,7 +48,6 @@ export const cs: Dictionary = {
     size: 'Rozměr',
     comment: 'Komentář',
     price: 'Cena',
-    work: 'Dílo',
     customSize: 'Vlastní rozměr',
     negotiablePrice: 'cena dohodou',
     photo: 'Fotka',

@@ -61,8 +61,6 @@ export interface Dictionary {
     email: string;
     size: string;
     comment: string;
-    /** Підпис «Робота:» перед назвою поточної роботи у формі. */
-    work: string;
     /** Підпис «Ціна:» перед значенням ціни у формі. */
     price: string;
     /** Варіант розміру «Свій розмір» (ціна договірна). */

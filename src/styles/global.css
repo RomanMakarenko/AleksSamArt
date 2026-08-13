@@ -645,14 +645,6 @@ html.scroll-locked {
   color: var(--color-accent);
 }
 
-.order-modal__work {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-}
-
 .order-form {
   display: grid;
   gap: 1rem;
@@ -664,10 +656,6 @@ html.scroll-locked {
   margin-bottom: 0.35rem;
   font-size: 0.9rem;
   color: var(--color-text-muted);
-}
-
-.order-form__label--inline {
-  margin: 0;
 }
 
 .order-form__input,

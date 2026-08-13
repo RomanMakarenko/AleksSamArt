@@ -13,7 +13,7 @@ export const WORKS_ORDER: string[] = [
   'Dua Lipa',
   'Zendaya',
   'Lenny Kravitz',
-  'Zaluzhnyi',
+  'Valerii Zaluzhnyi',
   'Elon Musk',
   'Drew Barrymore',
   'ORDER-Girl',

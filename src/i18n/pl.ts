@@ -25,7 +25,7 @@ export const pl: Dictionary = {
     rights: 'Wszelkie prawa zastrzeżone',
   },
   work: {
-    orderButton: 'Zamów',
+    orderButton: 'Zamów własny portret',
     buyButton: 'Kup',
     soldBadge: 'Sprzedane',
     orderBadge: 'Zamówienie',
@@ -48,7 +48,6 @@ export const pl: Dictionary = {
     size: 'Rozmiar',
     comment: 'Komentarz',
     price: 'Cena',
-    work: 'Dzieło',
     customSize: 'Własny rozmiar',
     negotiablePrice: 'cena do negocjacji',
     photo: 'Zdjęcie',
