@@ -6,20 +6,22 @@
  *  - **«Замовити»** — вибір розміру (A4/A3/A2 → ціна з `src/config`) або
  *    «Свій розмір» (ціна договірна); обов'язкове фото — потрібне для
  *    замовлення та точної ціни.
- *  - **«Купити»** — фіксована ціна за твір (з `ARTWORK_PRICES`), без розміру.
+ *  - **«Купити»** — купівля готової роботи: фіксована ціна `PORTRAIT_PRICE`
+ *    (400 у.о.), без вибору розміру та завантаження фото.
  *
  * Відкривається кнопками `[data-order-button]` / `[data-buy-button]` у WorkCard
- * (назва/ціна роботи читаються з `data-work-name` / `data-work-price` картки).
- * Надсилання — через **Netlify Forms**: розмітка `<form name="order"
- * data-netlify="true">` присутня в статичному HTML (Netlify виявляє форми на
- * build), а клієнт надсилає її через fetch (AJAX) з усіма полями, включно з фото.
+ * (назва роботи — з `data-work-name` картки, фіксована ціна «Купити» — з
+ * `data-portrait-price` модального вікна). Надсилання — через **Netlify Forms**:
+ * розмітка `<form name="order" data-netlify="true">` присутня в статичному HTML
+ * (Netlify виявляє форми на build), а клієнт надсилає її через fetch (AJAX)
+ * з усіма полями, включно з фото.
  *
  * Тексти, що змінюються залежно від потоку/стану, передаються в клієнтський
  * скрипт через `data-*` атрибути (як `data-counter-format` у лайтбоксі).
  * Клієнтська логіка — `src/lib/order-form.ts` (підключена внизу).
  */
 import type { Dictionary } from '../i18n';
-import { CURRENCY, ORDER_SIZES, CUSTOM_SIZE_ID, formatPrice } from '../config/site';
+import { CURRENCY, ORDER_SIZES, CUSTOM_SIZE_ID, PORTRAIT_PRICE, formatPrice } from '../config/site';
 
 interface Props {
   t: Dictionary;
@@ -44,6 +46,7 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
   data-error={t.form.error}
   data-required={t.form.required}
   data-negotiable={t.form.negotiablePrice}
+  data-portrait-price={PORTRAIT_PRICE}
 >
   <div class="order-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
     <!-- Кнопка закриття — на ній фокус після відкриття. -->

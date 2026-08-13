@@ -34,6 +34,12 @@ export const ORDER_SIZES = [
 /** Спеціальний варіант розміру у формі «Замовити»: свій розмір → ціна договірна. */
 export const CUSTOM_SIZE_ID = 'custom' as const;
 
+/**
+ * Фіксована ціна потоку «Купити» (готова робота): форма без вибору розміру
+ * та без завантаження фото, ціна завжди 400 у.о.
+ */
+export const PORTRAIT_PRICE = 400;
+
 /** Форматує ціну: «100 USD» (валюта — з env CURRENCY). */
 export function formatPrice(price: number): string {
   return `${price} ${CURRENCY}`;

@@ -7,12 +7,12 @@
  *
  * Виконує:
  *  - відкриття за кнопками `[data-order-button]` / `[data-buy-button]`; назва
- *    та ціна роботи читаються з картки `[data-work-card]` (`data-work-name`,
- *    `data-work-price`);
+ *    роботи читається з картки `[data-work-card]` (`data-work-name`);
  *  - два потоки:
  *    • **«Замовити»** — розмір (A4/A3/A2) → ціна автоматично; «Свій розмір» →
  *      ціна договірна; поле фото — обов'язкове для замовлення та точної ціни;
- *    • **«Купити»** — фіксована ціна за твір (з `ARTWORK_PRICES`), без розміру;
+ *    • **«Купити»** — купівля готової роботи: фіксована ціна `PORTRAIT_PRICE`
+ *      (400 у.о., з `data-portrait-price`), без вибору розміру та фото;
  *  - автопідстановку назви роботи, ціни, заголовка та тексту кнопки сабміту;
  *  - AJAX-надсилання через **Netlify Forms** (fetch із FormData, включаючи фото);
  *  - валідацію обов'язкових полів (ім'я, email) з повідомленням зі словника;
@@ -65,6 +65,8 @@ function init(): void {
   const error = d.error ?? '';
   const required = d.required ?? '';
   const negotiable = d.negotiable ?? '';
+  // Фіксована ціна купівлі портрета («Купити») — з `data-portrait-price` (400 у.о.).
+  const portraitPrice = d.portraitPrice ? Number(d.portraitPrice) : null;
 
   let mode: Mode | null = null; // null — форма закрита
   let trigger: HTMLElement | null = null; // кнопка, з якої відкрили
@@ -87,7 +89,9 @@ function init(): void {
   /** Оновлює рядок ціни та текст кнопки сабміту за поточним станом. */
   function renderPrice(): void {
     if (mode === 'buy') {
-      submitBtn.textContent = buyWithPrice.replace('{price}', formatPrice(buyPrice ?? 0));
+      const price = formatPrice(buyPrice ?? 0);
+      priceValue.textContent = price;
+      submitBtn.textContent = buyWithPrice.replace('{price}', price);
       return;
     }
     const price = selectedSizePrice();
@@ -107,14 +111,15 @@ function init(): void {
     modeInput.value = next;
     priceInput.value = '';
 
-    // Режим-залежні блоки: для «Купити» розмір і фото не потрібні
-    // (disabled — щоб поля не потрапили в FormData).
+    // Режим-залежні блоки: для «Купити» не потрібні ні вибір розміру, ні фото
+    // (disabled — щоб поля не потрапили в FormData). Рядок ціни лишається:
+    // купівля — фіксована ціна PORTRAIT_PRICE (400 у.о.).
     const isBuy = next === 'buy';
     sizesBlock.hidden = isBuy;
-    photoBlock.hidden = isBuy;
-    priceRow.hidden = isBuy;
     sizeInputs.forEach((input) => (input.disabled = isBuy));
+    photoBlock.hidden = isBuy;
     photoInput.disabled = isBuy;
+    priceRow.hidden = false;
 
     // Скидання до початкового стану (перший розмір відмічено в HTML).
     form.reset();
@@ -178,9 +183,8 @@ function init(): void {
     if (target.closest('[data-order-button]')) {
       open('order', workName, null);
     } else if (target.closest('[data-buy-button]')) {
-      const raw = card.dataset.workPrice ?? '';
-      const price = raw ? Number(raw) : NaN;
-      open('buy', workName, Number.isFinite(price) ? price : null);
+      // «Купити» — фіксована ціна портрета (PORTRAIT_PRICE, 400 у.о.).
+      open('buy', workName, portraitPrice);
     }
   });
 

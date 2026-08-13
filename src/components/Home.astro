@@ -95,9 +95,10 @@ const hasWorks = works.length > 0;
 
   <!--
     Модальна форма «Замовити»/«Купити»: кнопки `[data-order-button]` /
-    `[data-buy-button]` у WorkCard відкривають її з назвою та ціною роботи.
-    Надсилання — Netlify Forms (AJAX). Рендериться завжди: розмітка форми
-    потрібна в статичному HTML, щоб Netlify виявив її на build.
+    `[data-buy-button]` у WorkCard відкривають її з назвою роботи; ціна
+    «Купити» — фіксована (PORTRAIT_PRICE, 400 у.о.). Надсилання — Netlify
+    Forms (AJAX). Рендериться завжди: розмітка форми потрібна в статичному
+    HTML, щоб Netlify виявив її на build.
   -->
   <OrderForm t={t} />
 

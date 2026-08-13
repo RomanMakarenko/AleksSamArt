@@ -9,12 +9,13 @@
  *    клік/Enter/Space на рамці відкриває всі фото роботи (є лише коли є фото);
  *  - `[data-order-button]` / `[data-buy-button]` — кнопки, модальні форми — етап 5.
  *
- * «Купити» показується лише для робіт із ціною в `ARTWORK_PRICES`
- * (ключ — назва папки роботи = назва роботи). Поки мапа порожня — є лише «Замовити».
+ * «Купити» показується на кожній роботі, що не є замовленням (немає бейджа
+ * «Замовлення», префікса `ORDER-`). Відкриває форму купівлі готової роботи:
+ * фіксована ціна `PORTRAIT_PRICE` (400 у.о.), без вибору розміру та фото.
+ * У замовлень (`work.isOrder`) — лише кнопка «Замовити власний портрет».
  */
 import type { Work } from '../lib/works';
 import type { Dictionary } from '../i18n';
-import { ARTWORK_PRICES } from '../config/site';
 
 interface Props {
   work: Work;
@@ -24,7 +25,6 @@ interface Props {
 }
 
 const { work, t, index } = Astro.props;
-const hasPrice = typeof ARTWORK_PRICES[work.name] === 'number';
 
 // Рамка — тригер лайтбокса лише коли є хоча б одне фото (головне або галерея).
 const hasPhotos = Boolean(work.mainImage) || work.gallery.length > 0;
@@ -46,7 +46,6 @@ const openAttrs = hasPhotos
   class="work-card"
   data-work-card
   data-work-name={work.name}
-  data-work-price={hasPrice ? String(ARTWORK_PRICES[work.name]) : ''}
 >
   <div class="work-card__stack" data-stack aria-hidden="true">
     <div class="work-card__stack-item"></div>
@@ -75,8 +74,9 @@ const openAttrs = hasPhotos
       <button type="button" class="btn btn--order" data-order-button>
         {t.work.orderButton}
       </button>
-      <!-- «Купити» лише коли є ціна готової роботи (src/config → ARTWORK_PRICES) -->
-      {hasPrice && (
+      <!-- «Купити» — усі роботи, крім замовлень (немає бейджа «Замовлення»):
+           форма купівлі готової роботи, фіксована ціна 400 у.о., без розміру та фото. -->
+      {!work.isOrder && (
         <button type="button" class="btn btn--buy" data-buy-button>
           {t.work.buyButton}
         </button>
