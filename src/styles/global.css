@@ -599,9 +599,9 @@ html.scroll-locked {
   inset: 0;
   z-index: 120; /* вище лайтбокса (100), точок і футера (40) */
   display: grid;
-  place-items: center;
   padding: 1.25rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* iOS: плавний скрол у підкладці */
   background: rgb(16 10 30 / 0.82);
   opacity: 0;
   visibility: hidden;
@@ -615,11 +615,12 @@ html.scroll-locked {
   pointer-events: auto;
 }
 
+/* `margin: auto` у grid: коли діалог менший за екран — він по центру; коли вищий —
+   авто-поля стають 0, і верх не зрізається (весь діалог доступний скролом підкладки). */
 .order-modal__dialog {
   position: relative;
+  margin: auto;
   width: min(100%, 30rem);
-  max-height: 100%;
-  overflow-y: auto;
   padding: 2rem 1.5rem 1.5rem;
   border-radius: 16px;
   background: var(--color-bg-elevated);
@@ -775,6 +776,13 @@ html.scroll-locked {
 
 .order-form__submit {
   width: 100%;
+}
+
+/* Вузькі екрани: сітка розмірів в один стовпець — текст цін (nowrap) не виходить за край. */
+@media (max-width: 400px) {
+  .order-form__size-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .order-modal__success {
