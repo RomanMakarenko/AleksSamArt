@@ -186,3 +186,7 @@ function init(): void {
 }
 
 init();
+
+// Файл — ES-модуль (без експортів, але з `export {}`), щоб топ-рівневий `init`
+// не «конфліктував» з таким самим у `order-form.ts` під час `tsc --noEmit`.
+export {};

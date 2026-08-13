@@ -47,6 +47,12 @@ export const cs: Dictionary = {
     email: 'E-mail',
     size: 'Rozměr',
     comment: 'Komentář',
+    price: 'Cena',
+    work: 'Dílo',
+    customSize: 'Vlastní rozměr',
+    negotiablePrice: 'cena dohodou',
+    photo: 'Fotka',
+    photoHint: 'Přidejte fotografii — je potřeba pro objednávku a přesnou cenu.',
     submitOrder: 'Odeslat objednávku',
     buyWithPrice: 'Koupit za {price}',
     success:

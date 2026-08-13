@@ -1,0 +1,160 @@
+---
+/**
+ * Модальна форма «Замовити»/«Купити» (етап 5).
+ *
+ * Рендериться один раз на сторінці (у `Home.astro`). Два потоки:
+ *  - **«Замовити»** — вибір розміру (A4/A3/A2 → ціна з `src/config`) або
+ *    «Свій розмір» (ціна договірна); обов'язкове фото — потрібне для
+ *    замовлення та точної ціни.
+ *  - **«Купити»** — фіксована ціна за твір (з `ARTWORK_PRICES`), без розміру.
+ *
+ * Відкривається кнопками `[data-order-button]` / `[data-buy-button]` у WorkCard
+ * (назва/ціна роботи читаються з `data-work-name` / `data-work-price` картки).
+ * Надсилання — через **Netlify Forms**: розмітка `<form name="order"
+ * data-netlify="true">` присутня в статичному HTML (Netlify виявляє форми на
+ * build), а клієнт надсилає її через fetch (AJAX) з усіма полями, включно з фото.
+ *
+ * Тексти, що змінюються залежно від потоку/стану, передаються в клієнтський
+ * скрипт через `data-*` атрибути (як `data-counter-format` у лайтбоксі).
+ * Клієнтська логіка — `src/lib/order-form.ts` (підключена внизу).
+ */
+import type { Dictionary } from '../i18n';
+import { CURRENCY, ORDER_SIZES, CUSTOM_SIZE_ID, formatPrice } from '../config/site';
+
+interface Props {
+  t: Dictionary;
+}
+
+const { t } = Astro.props;
+
+// За замовчуванням вибраний перший розмір зі списку (A4) — ціна підставиться одразу.
+const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
+---
+
+<div
+  class="order-modal"
+  data-order-modal
+  aria-hidden="true"
+  data-currency={CURRENCY}
+  data-order-title={t.form.orderTitle}
+  data-buy-title={t.form.buyTitle}
+  data-submit-order={t.form.submitOrder}
+  data-buy-with-price={t.form.buyWithPrice}
+  data-success={t.form.success}
+  data-error={t.form.error}
+  data-required={t.form.required}
+  data-negotiable={t.form.negotiablePrice}
+>
+  <div class="order-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+    <!-- Кнопка закриття — на ній фокус після відкриття. -->
+    <button
+      type="button"
+      class="order-modal__close"
+      data-order-close
+      aria-label={t.lightbox.close}
+    >
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+
+    <!-- Підтвердження успіху — замінює форму після надсилання. -->
+    <div class="order-modal__success" data-order-success hidden>
+      <p class="order-modal__success-icon" aria-hidden="true">✓</p>
+      <p class="order-modal__success-text" data-order-success-text></p>
+    </div>
+
+    <!--
+      Netlify Forms: форма нижче — статична розмітка, яку Netlify знаходить на build
+      (атрибут data-netlify + name="order"). AJAX-надсилання робить `order-form.ts`
+      (приховані поля work/mode/price заповнюються клієнтом перед сабмітом).
+    -->
+    <form
+      class="order-form"
+      name="order"
+      data-netlify="true"
+      data-order-form
+      novalidate
+    >
+      <input type="hidden" name="form-name" value="order" />
+      <input type="hidden" name="mode" data-order-mode />
+      <input type="hidden" name="work" data-order-work />
+      <input type="hidden" name="price" data-order-price />
+
+      <h2 class="order-modal__title" id="order-modal-title" data-order-title-text></h2>
+      <p class="order-modal__work">
+        <span class="order-form__label order-form__label--inline">{t.form.work}:</span>
+        <strong data-order-work-name></strong>
+      </p>
+
+      <label class="order-form__field">
+        <span class="order-form__label">{t.form.name}</span>
+        <input class="order-form__input" type="text" name="name" autocomplete="name" required />
+      </label>
+
+      <label class="order-form__field">
+        <span class="order-form__label">{t.form.email}</span>
+        <input class="order-form__input" type="email" name="email" autocomplete="email" required />
+      </label>
+
+      <!-- Розмір → ціна автоматично. «Свій розмір» — ціна договірна. -->
+      <fieldset class="order-form__sizes" data-order-sizes>
+        <legend class="order-form__label">{t.form.size}</legend>
+        <div class="order-form__size-grid">
+          {ORDER_SIZES.map((size) => (
+            <label class="order-form__size">
+              <input
+                type="radio"
+                name="size"
+                value={size.id}
+                data-size-price={size.price}
+                checked={size.id === defaultSizeId}
+              />
+              <span class="order-form__size-label">{size.label}</span>
+              <span class="order-form__size-price">{formatPrice(size.price)}</span>
+            </label>
+          ))}
+          <label class="order-form__size">
+            <input type="radio" name="size" value={CUSTOM_SIZE_ID} data-size-custom />
+            <span class="order-form__size-label">{t.form.customSize}</span>
+            <span class="order-form__size-price">{t.form.negotiablePrice}</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="order-form__price" data-order-price-row>
+        <span class="order-form__price-label">{t.form.price}:</span>
+        <strong class="order-form__price-value" data-order-price-value></strong>
+      </div>
+
+      <!-- Фото потрібне: для замовлення та точної ціни (свій розмір/портрет). -->
+      <div class="order-form__field" data-order-photo>
+        <span class="order-form__label" id="order-photo-label">{t.form.photo}</span>
+        <input
+          class="order-form__input order-form__file"
+          type="file"
+          name="photo"
+          accept="image/*"
+          aria-labelledby="order-photo-label"
+          data-order-photo-input
+        />
+        <p class="order-form__hint">{t.form.photoHint}</p>
+      </div>
+
+      <label class="order-form__field">
+        <span class="order-form__label">{t.form.comment}</span>
+        <textarea class="order-form__textarea" name="comment" rows="3"></textarea>
+      </label>
+
+      <p class="order-form__error" data-order-error hidden></p>
+
+      <button class="btn btn--order order-form__submit" type="submit" data-order-submit>
+        {t.form.submitOrder}
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  import '../lib/order-form';
+</script>

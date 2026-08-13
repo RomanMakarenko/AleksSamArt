@@ -61,6 +61,18 @@ export interface Dictionary {
     email: string;
     size: string;
     comment: string;
+    /** Підпис «Робота:» перед назвою поточної роботи у формі. */
+    work: string;
+    /** Підпис «Ціна:» перед значенням ціни у формі. */
+    price: string;
+    /** Варіант розміру «Свій розмір» (ціна договірна). */
+    customSize: string;
+    /** Текст ціни для свого розміру: «ціна договірна». */
+    negotiablePrice: string;
+    /** Поле «Фото» (потрібне для замовлення та точної ціни). */
+    photo: string;
+    /** Підказка під полем фото: для замовлення та точної ціни треба додати фото. */
+    photoHint: string;
     submitOrder: string;
     buyWithPrice: string; // містить {price}
     success: string;

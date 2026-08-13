@@ -41,6 +41,11 @@ img {
   display: block;
 }
 
+/* `hidden` завжди ховає елемент, навіть якщо клас ставить `display` (напр. grid-форма). */
+[hidden] {
+  display: none !important;
+}
+
 /* ── Екрани ─────────────────────────────────────────────────────────────── */
 
 .screen {
@@ -570,6 +575,227 @@ html.scroll-locked {
 
 .lightbox__counter {
   font-variant-numeric: tabular-nums;
+}
+
+/* ── Модальна форма «Замовити»/«Купити» (етап 5) ───────────────────────── */
+
+/* Підкладка на весь екран; скрол блокується класом `scroll-locked` на <html>. */
+.order-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 120; /* вище лайтбокса (100), точок і футера (40) */
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  overflow-y: auto;
+  background: rgb(10 10 10 / 0.82);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.order-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.order-modal__dialog {
+  position: relative;
+  width: min(100%, 30rem);
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 2rem 1.5rem 1.5rem;
+  border-radius: 16px;
+  background: var(--color-bg-elevated);
+  box-shadow: 0 40px 100px rgb(0 0 0 / 0.6);
+}
+
+.order-modal__close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: none;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.order-modal__close:hover {
+  background: rgb(255 255 255 / 0.16);
+  color: var(--color-accent);
+}
+
+.order-modal__dialog button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.order-modal__title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-accent);
+}
+
+.order-modal__work {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.order-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.1rem;
+}
+
+.order-form__label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.order-form__label--inline {
+  margin: 0;
+}
+
+.order-form__input,
+.order-form__textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.04);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.order-form__input::file-selector-button {
+  margin-right: 0.75rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+
+.order-form__input:focus-visible,
+.order-form__textarea:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 1px;
+}
+
+.order-form__sizes {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.order-form__size-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.order-form__size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid rgb(255 255 255 / 0.15);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.order-form__size:hover {
+  border-color: rgb(255 255 255 / 0.35);
+}
+
+.order-form__size:has(input:checked) {
+  border-color: var(--color-accent);
+  background: rgb(229 181 103 / 0.08);
+}
+
+.order-form__size input {
+  accent-color: var(--color-accent);
+}
+
+.order-form__size-price {
+  margin-left: auto;
+  color: var(--color-accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.order-form__price {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.65rem;
+  border-radius: 10px;
+  background: rgb(229 181 103 / 0.08);
+  font-size: 1.05rem;
+}
+
+.order-form__price-value {
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.order-form__hint {
+  margin-top: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.order-form__error {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  background: rgb(255 90 90 / 0.12);
+  color: #ff9d9d;
+  font-size: 0.9rem;
+}
+
+.order-form__submit {
+  width: 100%;
+}
+
+.order-modal__success {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  text-align: center;
+  padding: 2rem 0 1.5rem;
+}
+
+.order-modal__success-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: rgb(229 181 103 / 0.15);
+  color: var(--color-accent);
+  font-size: 1.5rem;
+}
+
+.order-modal__success-text {
+  color: var(--color-text);
 }
 
 /* ── Доступність: зменшений рух ────────────────────────────────────────── */

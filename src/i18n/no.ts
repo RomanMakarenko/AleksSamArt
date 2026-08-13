@@ -47,6 +47,12 @@ export const no: Dictionary = {
     email: 'E-post',
     size: 'Størrelse',
     comment: 'Kommentar',
+    price: 'Pris',
+    work: 'Verk',
+    customSize: 'Egen størrelse',
+    negotiablePrice: 'pris etter avtale',
+    photo: 'Bilde',
+    photoHint: 'Legg til et bilde — det trengs for bestillingen og en eksakt pris.',
     submitOrder: 'Send bestilling',
     buyWithPrice: 'Kjøp for {price}',
     success:

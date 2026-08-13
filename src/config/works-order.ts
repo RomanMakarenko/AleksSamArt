@@ -21,4 +21,7 @@ export const WORKS_ORDER: string[] = [
   'ORDER-Red-haired girl',
   'ORDER-Guy',
   'ORDER-Girl with a baby',
+  'Boy',
+  'Couple',
+  'Kid',
 ];

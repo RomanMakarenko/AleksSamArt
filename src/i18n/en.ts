@@ -47,6 +47,12 @@ export const en: Dictionary = {
     email: 'Email',
     size: 'Size',
     comment: 'Comment',
+    price: 'Price',
+    work: 'Work',
+    customSize: 'Custom size',
+    negotiablePrice: 'negotiable price',
+    photo: 'Photo',
+    photoHint: 'Attach a photo — it is needed for the order and an exact price.',
     submitOrder: 'Send order',
     buyWithPrice: 'Buy for {price}',
     success:

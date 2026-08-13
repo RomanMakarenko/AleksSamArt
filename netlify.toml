@@ -15,4 +15,5 @@
   to = "/:splat"
   status = 301
 
-# TODO(етап 5): redirects для форми Netlify не потрібні — форма в статичному HTML.
+# Форма «Замовити» — в статичному HTML (name="order" + data-netlify="true" у OrderForm.astro);
+# redirects для Netlify Forms не потрібні.

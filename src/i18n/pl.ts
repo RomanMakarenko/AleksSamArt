@@ -47,6 +47,12 @@ export const pl: Dictionary = {
     email: 'E-mail',
     size: 'Rozmiar',
     comment: 'Komentarz',
+    price: 'Cena',
+    work: 'Dzieło',
+    customSize: 'Własny rozmiar',
+    negotiablePrice: 'cena do negocjacji',
+    photo: 'Zdjęcie',
+    photoHint: 'Dodaj zdjęcie — jest potrzebne do zamówienia i dokładnej ceny.',
     submitOrder: 'Wyślij zamówienie',
     buyWithPrice: 'Kup za {price}',
     success:

@@ -24,14 +24,22 @@ export const SOCIAL_LINKS: { facebook: string; instagram: string } = {
 /** Валюта цін. Дефолт USD (умовні одиниці), змінюється через env CURRENCY. */
 export const CURRENCY = CURRENCY_ENV;
 
-/** Розміри/ціни для потоку «Замовити» (тимчасові дефолти). */
+/** Розміри/ціни для потоку «Замовити» (тимчасові дефолти з CLAUDE.md). */
 export const ORDER_SIZES = [
-  { id: 'A2', label: 'A2', price: 300 },
-  { id: 'A3', label: 'A3', price: 200 },
   { id: 'A4', label: 'A4', price: 100 },
+  { id: 'A3', label: 'A3', price: 200 },
+  { id: 'A2', label: 'A2', price: 300 },
 ] as const;
 
-/** Ціни готових робіт: назва папки Drive → ціна. Поки порожня (заповниться пізніше). */
+/** Спеціальний варіант розміру у формі «Замовити»: свій розмір → ціна договірна. */
+export const CUSTOM_SIZE_ID = 'custom' as const;
+
+/** Форматує ціну: «100 USD» (валюта — з env CURRENCY). */
+export function formatPrice(price: number): string {
+  return `${price} ${CURRENCY}`;
+}
+
+/** Ціни готових робіт: назва папки → ціна. Поки порожня (заповниться пізніше). */
 export const ARTWORK_PRICES: Record<string, number> = {};
 
 /** Email для замовлень (Netlify Forms) — з env CONTACT_EMAIL. */

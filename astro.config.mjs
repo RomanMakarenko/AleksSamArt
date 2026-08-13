@@ -15,29 +15,27 @@ export default defineConfig({
   // Env-змінні, які потрапляють у код із `astro:env`.
   env: {
     schema: {
+      // Примітка: `description` не входить у тип `envField` цієї версії Astro —
+      // опис змінних зберігається в `.env.example` (див. `src/config/site.ts`).
       CURRENCY: envField.string({
         context: 'server',
         access: 'public',
         default: 'USD',
-        description: 'Валюта цін (умовні одиниці).',
       }),
       FACEBOOK_URL: envField.string({
         context: 'server',
         access: 'public',
         default: '',
-        description: 'Посилання на Facebook.',
       }),
       INSTAGRAM_URL: envField.string({
         context: 'server',
         access: 'public',
         default: '',
-        description: 'Посилання на Instagram.',
       }),
       CONTACT_EMAIL: envField.string({
         context: 'server',
         access: 'public',
         default: '',
-        description: 'Email, на який приходять замовлення (Netlify Forms).',
       }),
     },
   },

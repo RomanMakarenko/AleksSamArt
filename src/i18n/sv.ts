@@ -47,6 +47,12 @@ export const sv: Dictionary = {
     email: 'E-post',
     size: 'Storlek',
     comment: 'Kommentar',
+    price: 'Pris',
+    work: 'Verk',
+    customSize: 'Egen storlek',
+    negotiablePrice: 'pris enligt överenskommelse',
+    photo: 'Foto',
+    photoHint: 'Lägg till ett foto — det behövs för beställningen och ett exakt pris.',
     submitOrder: 'Skicka beställning',
     buyWithPrice: 'Köp för {price}',
     success:

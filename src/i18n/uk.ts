@@ -47,6 +47,12 @@ export const uk: Dictionary = {
     email: 'Email',
     size: 'Розмір',
     comment: 'Коментар',
+    price: 'Ціна',
+    work: 'Робота',
+    customSize: 'Свій розмір',
+    negotiablePrice: 'ціна договірна',
+    photo: 'Фото',
+    photoHint: 'Для замовлення та визначення точної ціни додайте фото.',
     submitOrder: 'Надіслати замовлення',
     buyWithPrice: 'Купити за {price}',
     success:

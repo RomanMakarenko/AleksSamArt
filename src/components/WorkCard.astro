@@ -42,7 +42,12 @@ const openAttrs = hasPhotos
   : {};
 ---
 
-<article class="work-card" data-work-card>
+<article
+  class="work-card"
+  data-work-card
+  data-work-name={work.name}
+  data-work-price={hasPrice ? String(ARTWORK_PRICES[work.name]) : ''}
+>
   <div class="work-card__stack" data-stack aria-hidden="true">
     <div class="work-card__stack-item"></div>
     <div class="work-card__stack-item"></div>

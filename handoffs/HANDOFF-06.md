@@ -31,7 +31,7 @@
 
 ### Інше
 - **`main.jpg` видалено** (staged): доданий комітом `82258b9` у корінь проєкту, ніде не використовувався — лишився зайвим після введення папок `src/assets/works/`.
-- Робіт зараз **12** (у `WORKS_ORDER`): Robbie Williams, Dua Lipa, Zendaya, Lenny Kravitz, Zaluzhnyi, Elon Musk, Drew Barrymore + 5 замовлень (`ORDER-*`). Слотів теж 12 — у колаж потрапляють усі роботи (2 пінові + 10 вільних).
+- Робіт зараз **15** (у `WORKS_ORDER`): Robbie Williams, Dua Lipa, Zendaya, Lenny Kravitz, Zaluzhnyi, Elon Musk, Drew Barrymore + 5 замовлень (`ORDER-*`) + Boy, Couple, Kid. Слотів у колажі 12 — туди потрапляють перші 12 робіт за списком (2 пінові + 10 вільних); останні 3 (Boy, Couple, Kid) слотів не отримують, поки не розширити `SLOTS`.
 
 ## Як перевірити
 - `npm run build` → 10 сторінок без помилок. У `dist/index.html` у інтро: `.scatter` із `.scatter__overlay` + 12 `<img class="scatter__item" …>`; `src` — thumbnails (~17–33 KB у `dist/_astro/`), на відміну від повних карток карток (~140–200 KB) тих самих робіт.

@@ -4,6 +4,7 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
 import WorkCard from './WorkCard.astro';
 import Lightbox from './Lightbox.astro';
 import PhotoScatter from './PhotoScatter.astro';
+import OrderForm from './OrderForm.astro';
 import { DICTIONARIES, type Locale } from '../i18n';
 import { SITE } from '../config/site';
 import { getWorksForBuild } from '../lib/works';
@@ -91,6 +92,14 @@ const hasWorks = works.length > 0;
     (головне + етапи + ракурси). Тригери — `[data-open-lightbox]` у WorkCard.
   -->
   {hasWorks && <Lightbox works={works} t={t} />}
+
+  <!--
+    Модальна форма «Замовити»/«Купити»: кнопки `[data-order-button]` /
+    `[data-buy-button]` у WorkCard відкривають її з назвою та ціною роботи.
+    Надсилання — Netlify Forms (AJAX). Рендериться завжди: розмітка форми
+    потрібна в статичному HTML, щоб Netlify виявив її на build.
+  -->
+  <OrderForm t={t} />
 
   <!-- «Стоп карток» (GSAP + ScrollTrigger) + навігація точками -->
   <script>
