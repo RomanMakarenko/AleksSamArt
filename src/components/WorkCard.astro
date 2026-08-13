@@ -63,6 +63,7 @@ const openAttrs = hasPhotos
   </div>
 
   <div class="work-card__meta">
+    {work.isOrder && <span class="work-card__badge">{t.work.orderBadge}</span>}
     <h2 class="work-card__title">{work.name}</h2>
     <div class="work-card__actions">
       <!-- Модальна форма «Замовити» — етап 5 -->

@@ -7,6 +7,7 @@
 [build.environment]
   FACEBOOK_URL = "https://www.facebook.com/alekssamart"
   INSTAGRAM_URL = "https://www.instagram.com/aleks_sam_art"
+  CONTACT_EMAIL = "alekssam.art@gmail.com"
 
 # `uk` живе на корені `/` без префікса — старі/прямі заходи на `/uk/...` перенаправляємо на корінь.
 [[redirects]]

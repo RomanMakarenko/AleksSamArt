@@ -15,4 +15,10 @@ export const WORKS_ORDER: string[] = [
   'Lenny Kravitz',
   'Zaluzhnyi',
   'Elon Musk',
+  'Drew Barrymore',
+  'ORDER-Girl',
+  'ORDER-Racer',
+  'ORDER-Red-haired girl',
+  'ORDER-Guy',
+  'ORDER-Girl with a baby',
 ];

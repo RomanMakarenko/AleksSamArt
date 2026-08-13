@@ -42,6 +42,21 @@ const hasWorks = works.length > 0;
       </div>
     </section>
 
+    <!--
+      Екран «Про автора»: текст з text.txt (переклади — у словниках i18n).
+      Повноекранний, як і роботи, але без власної точки в бічному індикаторі
+      (точки — лише по роботах; `[data-work-screen]` тут немає).
+    -->
+    <section class="screen screen--about">
+      <div class="about">
+        <h2 class="about__heading">{t.about.heading}</h2>
+        <p>{t.about.p1}</p>
+        <p>{t.about.p2}</p>
+        <p>{t.about.p3}</p>
+        <p class="about__cta">{t.about.cta}</p>
+      </div>
+    </section>
+
     <!-- 1 екран = 1 робота. Клік на точці справа — перехід до екрана. -->
     {hasWorks &&
       works.map((work, i) => (

@@ -17,6 +17,8 @@
  *  - **Порядок робіт у скролі** = порядок додавання; задається списком
  *    `WORKS_ORDER` у `src/config/works-order.ts` (нова робота — у кінець списку).
  *  - **Продана робота** — папка з префіксом `SOLD-` → виключається зі стосу.
+ *  - **Замовлення** (робота клієнта) — папка з префіксом `ORDER-` → у стосі,
+ *    але з бейджем «Замовлення» (перекладається) та унікальною назвою без префікса.
  *  - Зображення оптимізуються при build (`astro:assets`): WebP, до 2048px.
  *
  * Сканування й оптимізація відбуваються на build-етапі (`import.meta.glob`),
@@ -32,8 +34,10 @@ import { WORKS_ORDER } from '../config/works-order';
 export interface Work {
   /** Стабільний ідентифікатор (назва папки). */
   id: string;
-  /** Назва роботи = назва папки (без префікса `SOLD-`). */
+  /** Назва роботи = назва папки (без префіксів `SOLD-` / `ORDER-`). */
   name: string;
+  /** Робота клієнта (попереднє замовлення): показуємо бейдж «Замовлення». */
+  isOrder: boolean;
   /** URL головного фото (оптимізоване на build). */
   mainImage: string | null;
   /** URL додаткових фото: етапи, ракурси (в лайтбоксі). */
@@ -42,6 +46,9 @@ export interface Work {
 
 /** Префікс папки проданої роботи: `SOLD-Назва` → виключається зі стосу. */
 export const SOLD_PREFIX = 'SOLD-';
+
+/** Префікс папки замовлення: `ORDER-Назва` → у стосі, з бейджем «Замовлення». */
+export const ORDER_PREFIX = 'ORDER-';
 
 /** Ширина, до якої обмежуємо зображення (повноекран картка + лайтбокс). */
 const MAX_WIDTH = 2048;
@@ -124,7 +131,12 @@ export async function getLocalWorks(): Promise<Work[]> {
       [main, ...gallery].map((f) => optimize(f.img)),
     );
 
-    works.push({ id: name, name, mainImage, gallery: optimizedGallery });
+    // `ORDER-` у назві папки → це замовлення: префікс прибираємо з назви,
+    // прапорець лишаємо — на картці з'явиться бейдж «Замовлення».
+    const isOrder = name.startsWith(ORDER_PREFIX);
+    const displayName = isOrder ? name.slice(ORDER_PREFIX.length) : name;
+
+    works.push({ id: name, name: displayName, isOrder, mainImage, gallery: optimizedGallery });
   }
   return works;
 }

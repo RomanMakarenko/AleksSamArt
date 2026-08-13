@@ -3,11 +3,20 @@ import type { Dictionary } from './dictionary';
 export const en: Dictionary = {
   meta: {
     description:
-      'Portfolio of artist AleksSamArt: order a custom painting or buy an existing artwork.',
+      'Pencil portraits on commission by AleksSamArt: precision, attention to detail, living emotions. Order a portrait as a special gift.',
+    keywords:
+      'pencil portrait, portrait on commission, pencil drawing, portrait gift, artist portrait, AleksSamArt',
   },
   hero: {
     tagline: 'Portfolio of artist AleksSamArt',
     subtitle: 'Order a custom painting or buy an existing artwork.',
+  },
+  about: {
+    heading: 'Pencil portraits',
+    p1: 'Art comes alive in details. Every pencil portrait is not just a drawing — it is a way to preserve a character, emotions, and a special moment on paper.',
+    p2: 'The works combine precision, attention to the smallest details, and living emotions. A special place belongs to portraits of people — from subtle facial features and the gaze to characteristic details that make each work truly unique.',
+    p3: 'A pencil portrait of a loved one, a friend, or a close relative can become a wonderful gift for a birthday, anniversary, wedding, Valentine’s Day, or any other celebration. It is a gift that is not just given — it is kept as a memory.',
+    cta: 'Browse the works and order a portrait created especially for you.',
   },
   langSwitcher: {
     label: 'Language',
@@ -19,6 +28,7 @@ export const en: Dictionary = {
     orderButton: 'Order',
     buyButton: 'Buy',
     soldBadge: 'Sold',
+    orderBadge: 'Order',
   },
   dots: {
     label: 'Works navigation',

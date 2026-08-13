@@ -3,11 +3,20 @@ import type { Dictionary } from './dictionary';
 export const no: Dictionary = {
   meta: {
     description:
-      'Portefølje til kunstneren AleksSamArt: bestille et maleri på bestilling eller kjøpe et ferdig verk.',
+      'Blyantportretter på bestilling fra AleksSamArt: presisjon, oppmerksomhet på detaljer, levende følelser. Bestill et portrett som en spesiell gave.',
+    keywords:
+      'blyantportrett, portrett på bestilling, blyanttegning, portrett gave, kunstnerportrett, AleksSamArt',
   },
   hero: {
     tagline: 'Portefølje til kunstneren AleksSamArt',
     subtitle: 'Bestill et personlig maleri eller kjøp et ferdig verk.',
+  },
+  about: {
+    heading: 'Blyantportretter',
+    p1: 'Kunsten våkner til live i detaljene. Hvert blyantportrett er ikke bare en tegning, men en mulighet til å bevare karakter, følelser og et spesielt øyeblikk på papiret.',
+    p2: 'I arbeidene forenes presisjon, oppmerksomhet på de minste detaljene og levende følelser. En spesiell plass inntar portretter av mennesker — fra fine ansiktstrekk og blikket til karakteristiske detaljer som gjør hvert verk virkelig spesielt.',
+    p3: 'Et blyantportrett av en kjær, en venn eller en nær slektning kan bli en fantastisk gave til bursdag, jubileum, bryllup, valentinsdagen eller en hvilken som helst annen feiring. Det er en gave som ikke bare gis — den bevares som et minne.',
+    cta: 'Se verkene og bestill et portrett laget spesielt for deg.',
   },
   langSwitcher: {
     label: 'Språk',
@@ -19,6 +28,7 @@ export const no: Dictionary = {
     orderButton: 'Bestill',
     buyButton: 'Kjøp',
     soldBadge: 'Solgt',
+    orderBadge: 'Bestilling',
   },
   dots: {
     label: 'Navigasjon mellom verkene',

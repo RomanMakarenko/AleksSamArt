@@ -3,11 +3,20 @@ import type { Dictionary } from './dictionary';
 export const it: Dictionary = {
   meta: {
     description:
-      'Portfolio dell’artista AleksSamArt: ordinare un quadro su misura o acquistare un’opera esistente.',
+      'Ritratti a matita su ordinazione di AleksSamArt: precisione, attenzione ai dettagli, emozioni vive. Ordina un ritratto come regalo speciale.',
+    keywords:
+      'ritratto a matita, ritratto su ordinazione, disegno a matita, ritratto regalo, ritratto d’artista, AleksSamArt',
   },
   hero: {
     tagline: 'Portfolio dell’artista AleksSamArt',
     subtitle: 'Ordina un quadro su misura o acquista un’opera esistente.',
+  },
+  about: {
+    heading: 'Ritratti a matita',
+    p1: 'L’arte prende vita nei dettagli. Ogni ritratto a matita non è solo un disegno, ma l’opportunità di preservare carattere, emozioni e un momento speciale sulla carta.',
+    p2: 'Le opere uniscono precisione, attenzione ai minimi dettagli ed emozioni vive. Un posto speciale è occupato dai ritratti di persone — dai tratti sottili del viso e dello sguardo ai dettagli caratteristici che rendono ogni opera davvero unica.',
+    p3: 'Un ritratto a matita di una persona cara, di un amico o di un parente stretto può diventare un regalo meraviglioso per un compleanno, un anniversario, un matrimonio, San Valentino o qualsiasi altra occasione. È un regalo che non si limita a essere donato — si conserva come ricordo.',
+    cta: 'Sfoglia le opere e ordina un ritratto creato appositamente per te.',
   },
   langSwitcher: {
     label: 'Lingua',
@@ -19,6 +28,7 @@ export const it: Dictionary = {
     orderButton: 'Ordina',
     buyButton: 'Acquista',
     soldBadge: 'Venduto',
+    orderBadge: 'Ordine',
   },
   dots: {
     label: 'Navigazione delle opere',

@@ -3,11 +3,20 @@ import type { Dictionary } from './dictionary';
 export const sv: Dictionary = {
   meta: {
     description:
-      'Portfolio av konstnären AleksSamArt: beställ en personlig tavla eller köp ett färdigt verk.',
+      'Blyertsporträtt på beställning från AleksSamArt: precision, uppmärksamhet på detaljer, levande känslor. Beställ ett porträtt som en speciell gåva.',
+    keywords:
+      'blyertsporträtt, porträtt på beställning, blyertsteckning, porträtt present, konstnärsporträtt, AleksSamArt',
   },
   hero: {
     tagline: 'Portfolio av konstnären AleksSamArt',
     subtitle: 'Beställ en personlig tavla eller köp ett färdigt verk.',
+  },
+  about: {
+    heading: 'Blyertsporträtt',
+    p1: 'Konsten vaknar till liv i detaljerna. Varje blyertsporträtt är inte bara en teckning utan en möjlighet att bevara karaktär, känslor och ett speciellt ögonblick på papper.',
+    p2: 'I verken förenas precision, omsorg om de minsta detaljerna och levande känslor. En särskild plats intar porträtt av människor — från fina ansiktsdrag och blicken till karaktäristiska detaljer som gör varje verk verkligt speciellt.',
+    p3: 'Ett blyertsporträtt av en älskad, en vän eller en nära släkting kan bli en underbar present till födelsedagen, årsdagen, bröllopet, alla hjärtans dag eller vilken annan högtid som helst. Det är en gåva som man inte bara ger — man bevarar den som ett minne.',
+    cta: 'Titta på verken och beställ ett porträtt skapat speciellt för dig.',
   },
   langSwitcher: {
     label: 'Språk',
@@ -19,6 +28,7 @@ export const sv: Dictionary = {
     orderButton: 'Beställ',
     buyButton: 'Köp',
     soldBadge: 'Såld',
+    orderBadge: 'Beställning',
   },
   dots: {
     label: 'Navigering mellan verk',

@@ -8,11 +8,20 @@ export interface Dictionary {
   /** Meta/SEO */
   meta: {
     description: string;
+    keywords: string;
   };
   /** Головний екран */
   hero: {
     tagline: string;
     subtitle: string;
+  };
+  /** Екран «Про автора» (текст з text.txt) */
+  about: {
+    heading: string;
+    p1: string;
+    p2: string;
+    p3: string;
+    cta: string;
   };
   /** Перемикач мови */
   langSwitcher: {
@@ -27,6 +36,8 @@ export interface Dictionary {
     orderButton: string;
     buyButton: string;
     soldBadge: string;
+    /** Бейдж «Замовлення» на картці роботи клієнта (префікс `ORDER-` у папці). */
+    orderBadge: string;
   };
   /** Точки-індикатор (етап 3) */
   dots: {

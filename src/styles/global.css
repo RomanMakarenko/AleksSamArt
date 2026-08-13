@@ -108,6 +108,40 @@ img {
   }
 }
 
+/* ── Екран «Про автора» ────────────────────────────────────────────────── */
+
+.screen--about {
+  display: grid;
+  place-items: center;
+  padding: 4rem 1.25rem calc(var(--footer-height) + 2rem);
+}
+
+.about {
+  max-width: 40rem;
+  display: grid;
+  gap: 1.1rem;
+  justify-items: center;
+  text-align: center;
+}
+
+.about__heading {
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--color-accent);
+}
+
+.about p {
+  color: var(--color-text-muted);
+  font-size: clamp(1rem, 2vw, 1.1rem);
+}
+
+.about__cta {
+  font-weight: 600;
+  color: var(--color-text);
+  margin-top: 0.4rem;
+}
+
 /* Перемикач мови: компактні коди локалей, активна — підсвічена. */
 .lang-switcher {
   display: flex;
@@ -216,6 +250,19 @@ img {
   font-size: clamp(1.15rem, 2.5vw, 1.5rem);
   font-weight: 600;
   letter-spacing: 0.02em;
+}
+
+/* Бейдж «Замовлення» (робота клієнта, папка з префіксом `ORDER-`). */
+.work-card__badge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  border: 1px solid var(--color-accent);
+  border-radius: 999px;
+  color: var(--color-accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .work-card__actions {
