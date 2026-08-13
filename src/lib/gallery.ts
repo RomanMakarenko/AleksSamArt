@@ -7,6 +7,7 @@
  *  - ефект «стосу карток»: картка в'їжджає зі стосу (нахил + масштаб + тінь),
  *    а на виході «осідає» назад — GSAP + ScrollTrigger із `scrub`;
  *  - паралакс інтро-екрана (затемнення + підйом при скролі);
+ *  - фон-колаж інтро: «плавання» розкиданих фото + паралакс (setupScatter);
  *  - бічний індикатор: активна точка = поточна робота (рахунок від геометрії
  *    кожен кадр скролу — стійко до resize), клік по точці = перехід до роботи;
  *  - `prefers-reduced-motion`: анімації вимикаються, навігація лишається.
@@ -33,6 +34,7 @@ function init(gallery: HTMLElement): void {
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduced) {
     setupCardStack(gallery, screens);
+    setupScatter(gallery);
   }
 
   setupDots(screens);
@@ -120,6 +122,54 @@ function setupCardStack(gallery: HTMLElement, screens: HTMLElement[]): void {
       );
     }
   }
+}
+
+/**
+ * Фон-колаж інтро-екрана (`[data-scatter]`): легке «плавання» кожного фото
+ * навколо своєї позиції (різний темп/амплітуда) + паралакс усього розсипу,
+ * поки інтро їде вгору при скролі. Базова позиція/нахил — у CSS/inline.
+ */
+function setupScatter(gallery: HTMLElement): void {
+  const scatter = gallery.querySelector<HTMLElement>('[data-scatter]');
+  const items = Array.from(scatter?.querySelectorAll<HTMLElement>('[data-scatter-item]') ?? []);
+  if (!scatter || items.length === 0) return;
+
+  // Паралакс: усе полотно трохи зсувається, поки інтро скролиться вгору.
+  const hero = gallery.querySelector<HTMLElement>('[data-hero]');
+  if (hero) {
+    gsap.fromTo(
+      scatter,
+      { yPercent: 3 },
+      {
+        yPercent: -5,
+        ease: 'none',
+        scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true },
+      },
+    );
+  }
+
+  // «Плаввання»: кожне фото дрейфує навколо позиції зі своїм темпом і фазою.
+  items.forEach((item, i) => {
+    const baseRot = Number(item.dataset.rot ?? 0);
+    const driftX = 5 + (i % 4) * 2;
+    const driftY = 8 + (i % 5) * 3;
+    const duration = 6 + (i % 6) * 1.5;
+
+    gsap.fromTo(
+      item,
+      { rotation: baseRot - 1.5, x: -driftX, y: -driftY },
+      {
+        rotation: baseRot + 1.5,
+        x: driftX,
+        y: driftY,
+        duration,
+        ease: 'sine.inOut',
+        yoyo: true,
+        repeat: -1,
+        delay: (i % 6) * 0.5,
+      },
+    );
+  });
 }
 
 /** Точки: активна за геометрією на scroll/resize; клік = плавний перехід. */

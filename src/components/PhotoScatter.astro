@@ -1,0 +1,93 @@
+---
+/**
+ * Фон стартового екрана — «розсип» головних фото робіт.
+ *
+ * Колаж із головних зображень робіт (по одному на роботу), розкиданих по
+ * екрану з різним нахилом і розміром — ніби фотки лежать на столі. Позиції —
+ * статичний масив слотів (детерміновано на build, без JS-розрахунків).
+ *
+ * Вага: беруться маленькі прев'ю (`Work.thumb`, ~420px), а не повнорозмірні
+ * 2048px, щоб не роздувати перший екран. Оверлей затемнює колаж, щоб
+ * заголовок лишався читабельним («заглушений» фон замість порожнього темного).
+ *
+ * Анімація (легке «плавання» + паралакс при скролі) — у `src/lib/gallery.ts`,
+ * який читає `[data-scatter]`, `[data-scatter-item]` та `data-rot`.
+ */
+import type { Work } from '../lib/works';
+
+interface Props {
+  works: Work[];
+}
+
+const { works } = Astro.props;
+
+/**
+ * Слоти розкиду: `left`/`top` у % екрана, `width` у vmin, `rot` у градусах.
+ * Середина (за заголовком) — розріджена й дрібніша; краї — щільніші.
+ * Слот 11 — «майже в центрі»: зсунутий лівіше, щоб не закривати заголовок.
+ */
+const SLOTS = [
+  { left: 5, top: 6, width: 21, rot: -8 },
+  { left: 16, top: 20, width: 15, rot: 6 },
+  { left: 3, top: 46, width: 17, rot: 10 },
+  { left: 11, top: 74, width: 23, rot: -5 },
+  { left: 29, top: 84, width: 15, rot: 4 },
+  { left: 45, top: 5, width: 17, rot: -3 },
+  { left: 52, top: 72, width: 19, rot: -9 },
+  { left: 66, top: 16, width: 14, rot: 7 },
+  { left: 76, top: 44, width: 21, rot: -6 },
+  { left: 70, top: 80, width: 15, rot: 8 },
+  { left: 88, top: 8, width: 16, rot: -10 },
+  { left: 30, top: 43, width: 13, rot: -2 },
+];
+
+/**
+ * Примусове призначення слотів конкретним роботам (ключ — **назва папки**
+ * роботи, як вона показується на картці, без префікса `ORDER-`).
+ * Решту робіт розкладаємо по вільних слотах у порядку списку. Потрібно,
+ * коли фото погано встає в слот за порядком (напр. закриває заголовок).
+ */
+const PINNED: Record<string, number> = {
+  'Elon Musk': 11, // «майже в центрі», але лівіше — не перебиває текст
+  'Girl with a baby': 2, // геть із центру — ліворуч
+};
+
+// Побудова колажу: спершу пінові роботи → свої слоти, решта — по вільних.
+const assigned = new Set<number>();
+for (const slot of Object.values(PINNED)) {
+  if (slot < SLOTS.length) assigned.add(slot);
+}
+const freeSlots = SLOTS.map((_, i) => i).filter((i) => !assigned.has(i));
+
+const placed: { src: string; slot: number }[] = [];
+let nextFree = 0;
+for (const work of works) {
+  if (!work.thumb) continue;
+  const pinnedSlot = PINNED[work.name];
+  if (pinnedSlot !== undefined && pinnedSlot < SLOTS.length) {
+    placed.push({ src: work.thumb, slot: pinnedSlot });
+  } else if (nextFree < freeSlots.length) {
+    placed.push({ src: work.thumb, slot: freeSlots[nextFree++] });
+  }
+}
+---
+
+<div class="scatter" data-scatter aria-hidden="true">
+  <div class="scatter__overlay"></div>
+  {placed.map(({ src, slot: slotIdx }) => {
+    const slot = SLOTS[slotIdx];
+    return (
+      <img
+        class="scatter__item"
+        src={src}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        fetchpriority="low"
+        style={`left:${slot.left}%;top:${slot.top}%;width:${slot.width}vmin;transform:rotate(${slot.rot}deg)`}
+        data-rot={slot.rot}
+        data-scatter-item
+      />
+    );
+  })}
+</div>

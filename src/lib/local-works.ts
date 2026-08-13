@@ -40,6 +40,8 @@ export interface Work {
   isOrder: boolean;
   /** URL головного фото (оптимізоване на build). */
   mainImage: string | null;
+  /** Маленьке прев'ю головного фото — фон-колаж інтро-екрана (легка вага). */
+  thumb: string | null;
   /** URL додаткових фото: етапи, ракурси (в лайтбоксі). */
   gallery: string[];
 }
@@ -52,6 +54,8 @@ export const ORDER_PREFIX = 'ORDER-';
 
 /** Ширина, до якої обмежуємо зображення (повноекран картка + лайтбокс). */
 const MAX_WIDTH = 2048;
+/** Ширина мініатюри для фону-колажу інтро-екрана (маленька, щоб не тягнути важкі). */
+const THUMB_WIDTH = 420;
 /** Формат та якість оптимізованих зображень. */
 const IMAGE_FORMAT = 'webp' as const;
 const IMAGE_QUALITY = 80;
@@ -102,10 +106,10 @@ function groupByWork(): Map<string, WorkFile[]> {
   return groups;
 }
 
-/** Оптимізований URL зображення (WebP, обмеження ширини). */
-async function optimize(img: ImageMetadata): Promise<string> {
-  const width = Math.min(img.width, MAX_WIDTH);
-  const { src } = await getImage({ src: img, width, format: IMAGE_FORMAT, quality: IMAGE_QUALITY });
+/** Оптимізований URL зображення (WebP, до `width` пікселів). */
+async function optimize(img: ImageMetadata, width: number): Promise<string> {
+  const target = Math.min(img.width, width);
+  const { src } = await getImage({ src: img, width: target, format: IMAGE_FORMAT, quality: IMAGE_QUALITY });
   return src;
 }
 
@@ -127,16 +131,18 @@ export async function getLocalWorks(): Promise<Work[]> {
     const main = sorted[mainIndex >= 0 ? mainIndex : 0];
     const gallery = sorted.filter((f) => f !== main);
 
-    const [mainImage, ...optimizedGallery] = await Promise.all(
-      [main, ...gallery].map((f) => optimize(f.img)),
-    );
+    // Головне фото — у двох розмірах: повне (картка/лайтбокс) і маленьке
+    // прев'ю `thumb` для фону-колажу інтро-екрана.
+    const mainImage = await optimize(main.img, MAX_WIDTH);
+    const thumb = await optimize(main.img, THUMB_WIDTH);
+    const optimizedGallery = await Promise.all(gallery.map((f) => optimize(f.img, MAX_WIDTH)));
 
     // `ORDER-` у назві папки → це замовлення: префікс прибираємо з назви,
     // прапорець лишаємо — на картці з'явиться бейдж «Замовлення».
     const isOrder = name.startsWith(ORDER_PREFIX);
     const displayName = isOrder ? name.slice(ORDER_PREFIX.length) : name;
 
-    works.push({ id: name, name: displayName, isOrder, mainImage, gallery: optimizedGallery });
+    works.push({ id: name, name: displayName, isOrder, mainImage, thumb, gallery: optimizedGallery });
   }
   return works;
 }

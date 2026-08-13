@@ -55,6 +55,7 @@ img {
   display: grid;
   place-items: center;
   padding: 1rem;
+  overflow: hidden; /* «розсип» фото не виходить за межі екрана */
 }
 
 /* Нижній padding відводить місце футеру, щоб картка не лягала під нього. */
@@ -67,6 +68,8 @@ img {
 /* ── Інтро-екран ────────────────────────────────────────────────────────── */
 
 .hero {
+  position: relative; /* над фоном-колажем (z-index нижче) */
+  z-index: 1;
   max-width: 42rem;
   display: grid;
   gap: 0.85rem;
@@ -106,6 +109,40 @@ img {
     transform: translateY(8px);
     opacity: 1;
   }
+}
+
+/* ── Фон-колаж «розсип фото» (інтро-екран) ─────────────────────────────── */
+
+/* Підкладка на весь екран, під контентом. Фото та їхні позиції/нахил —
+   у PhotoScatter.astro (inline `left`/`top`/`width`/`transform`). */
+.scatter {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scatter__item {
+  position: absolute;
+  aspect-ratio: 3 / 4; /* рівномірні «картки», обрізання по центру */
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 10px 28px rgb(0 0 0 / 0.35);
+  opacity: 0.65; /* «заглушений» фон — частина роботи оверлея */
+}
+
+/* Затемнення: заголовок читабельний поверх колажу. Градієнт відповідає
+   основному фону `--color-bg`, щоб краї м'яко зливалися зі сторінкою. */
+.scatter__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgb(20 20 20 / 0.74) 0%,
+    rgb(20 20 20 / 0.55) 42%,
+    rgb(20 20 20 / 0.82) 100%
+  );
 }
 
 /* ── Екран «Про автора» ────────────────────────────────────────────────── */
