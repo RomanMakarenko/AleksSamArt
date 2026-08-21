@@ -58,5 +58,6 @@ export const de: Dictionary = {
       'Vielen Dank! Ihre Bestellung wurde gesendet. Wir melden uns in Kürze bei Ihnen.',
     error: 'Das Formular konnte nicht gesendet werden. Bitte versuchen Sie es erneut.',
     required: 'Bitte füllen Sie die Pflichtfelder aus: Name und E-Mail.',
+    emailInvalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
   },
 };

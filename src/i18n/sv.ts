@@ -58,5 +58,6 @@ export const sv: Dictionary = {
       'Tack! Din beställning har skickats. Vi kontaktar dig inom kort.',
     error: 'Det gick inte att skicka formuläret. Försök igen.',
     required: 'Fyll i de obligatoriska fälten: namn och e-post.',
+    emailInvalid: 'Ange en giltig e-postadress.',
   },
 };

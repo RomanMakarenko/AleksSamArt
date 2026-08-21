@@ -76,5 +76,7 @@ export interface Dictionary {
     success: string;
     error: string;
     required: string;
+    /** Email не відповідає структурі (некоректний формат). */
+    emailInvalid: string;
   };
 }

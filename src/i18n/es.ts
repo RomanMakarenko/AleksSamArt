@@ -58,5 +58,6 @@ export const es: Dictionary = {
       '¡Gracias! Tu pedido ha sido enviado. Nos pondremos en contacto contigo en breve.',
     error: 'No se pudo enviar el formulario. Inténtalo de nuevo.',
     required: 'Por favor, completa los campos obligatorios: nombre y correo electrónico.',
+    emailInvalid: 'Por favor, introduce un correo electrónico válido.',
   },
 };

@@ -58,5 +58,6 @@ export const no: Dictionary = {
       'Takk! Bestillingen din er sendt. Vi kontakter deg i nær fremtid.',
     error: 'Kunne ikke sende skjemaet. Prøv igjen.',
     required: 'Fyll ut de obligatoriske feltene: navn og e-post.',
+    emailInvalid: 'Vennligst skriv inn en gyldig e-postadresse.',
   },
 };

@@ -58,5 +58,6 @@ export const it: Dictionary = {
       'Grazie! Il tuo ordine è stato inviato. Ti contatteremo al più presto.',
     error: 'Invio del modulo non riuscito. Riprova.',
     required: 'Compila i campi obbligatori: nome ed email.',
+    emailInvalid: 'Inserisci un indirizzo email valido.',
   },
 };

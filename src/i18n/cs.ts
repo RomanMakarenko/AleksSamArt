@@ -58,5 +58,6 @@ export const cs: Dictionary = {
       'Děkujeme! Vaše objednávka byla odeslána. Ozveme se vám v nejbližší době.',
     error: 'Formulář se nepodařilo odeslat. Zkuste to znovu.',
     required: 'Vyplňte prosím povinná pole: jméno a e-mail.',
+    emailInvalid: 'Zadejte platnou e-mailovou adresu.',
   },
 };

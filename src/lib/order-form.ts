@@ -16,6 +16,7 @@
  *  - автопідстановку назви роботи, ціни, заголовка та тексту кнопки сабміту;
  *  - AJAX-надсилання через **Netlify Forms** (fetch із FormData, включаючи фото);
  *  - валідацію обов'язкових полів (ім'я, email) з повідомленням зі словника;
+ *  - перевірку email за структурою (регекс `EMAIL_RE`) після введення та на сабміті;
  *  - стан «надіслано» (форма замінюється підтвердженням) та обробку помилки;
  *  - закриття: Esc, кнопка «×», клік поза діалогом; блокування скролу;
  *  - фокус: на відкритті — на кнопку закриття; trap у межах модалки;
@@ -24,6 +25,13 @@
 
 /** Режим форми: індивідуальне замовлення або купівля готової роботи. */
 type Mode = 'order' | 'buy';
+
+/**
+ * Регекс структури email: local@domain.tld.
+ * Локальна частина — літери/цифри/крапка/підкреслення/%/+-; домен — з крапкою;
+ * TLD — латиниця, 2+ літери.
+ */
+const EMAIL_RE = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function init(): void {
   // Runtime-guard: якщо розмітки немає — форма просто не підключається.
@@ -44,6 +52,7 @@ function init(): void {
   const sizesBlock = form.querySelector<HTMLElement>('[data-order-sizes]')!;
   const photoBlock = form.querySelector<HTMLElement>('[data-order-photo]')!;
   const photoInput = form.querySelector<HTMLInputElement>('[data-order-photo-input]')!;
+  const emailInput = form.querySelector<HTMLInputElement>('input[name="email"]')!;
   const workInput = form.querySelector<HTMLInputElement>('[data-order-work]')!;
   const modeInput = form.querySelector<HTMLInputElement>('[data-order-mode]')!;
   const priceInput = form.querySelector<HTMLInputElement>('[data-order-price]')!;
@@ -64,6 +73,7 @@ function init(): void {
   const success = d.success ?? '';
   const error = d.error ?? '';
   const required = d.required ?? '';
+  const emailInvalid = d.emailInvalid ?? '';
   const negotiable = d.negotiable ?? '';
   // Фіксована ціна купівлі портрета («Купити») — з `data-portrait-price` (400 у.о.).
   const portraitPrice = d.portraitPrice ? Number(d.portraitPrice) : null;
@@ -221,6 +231,18 @@ function init(): void {
     if ((event.target as HTMLInputElement).name === 'size') renderPrice();
   });
 
+  // Перевірка email за структурою (регекс) після введення: коли користувач
+  // залишає поле (blur) — показуємо помилку, якщо значення не відповідає регексу.
+  emailInput.addEventListener('blur', () => {
+    const email = emailInput.value.trim();
+    if (email && !EMAIL_RE.test(email)) showError(emailInvalid);
+  });
+
+  // Коли користувач виправляє email і формат стає валідним — прибираємо помилку.
+  emailInput.addEventListener('input', () => {
+    if (EMAIL_RE.test(emailInput.value.trim())) errorEl.hidden = true;
+  });
+
   // ─── Надсилання через Netlify Forms (AJAX) ──────────────────────────────
 
   form.addEventListener('submit', async (event) => {
@@ -232,6 +254,11 @@ function init(): void {
     if (!name || !email) {
       showError(required);
       nameEl.focus();
+      return;
+    }
+    if (!EMAIL_RE.test(email)) {
+      showError(emailInvalid);
+      emailEl.focus();
       return;
     }
 
