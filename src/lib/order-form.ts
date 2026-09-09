@@ -9,10 +9,10 @@
  *  - відкриття за кнопками `[data-order-button]` / `[data-buy-button]`; назва
  *    роботи читається з картки `[data-work-card]` (`data-work-name`);
  *  - два потоки:
- *    • **«Замовити»** — розмір (A4/A3/A2) → ціна автоматично; «Свій розмір» →
+ *    • **«Замовити»** — формат і кількість людей → ціна автоматично; «Свій розмір» →
  *      ціна договірна; поле фото — обов'язкове для замовлення та точної ціни;
- *    • **«Купити»** — купівля готової роботи: фіксована ціна `PORTRAIT_PRICE`
- *      (400 у.о., з `data-portrait-price`), без вибору розміру та фото;
+ *    • **«Купити»** — купівля готової роботи: ціна з `data-buy-price` або
+ *      `data-portrait-price`, без вибору розміру та фото;
  *  - автопідстановку назви роботи, ціни, заголовка та тексту кнопки сабміту;
  *  - AJAX-надсилання через **Netlify Forms** (fetch із FormData, включаючи фото);
  *  - валідацію обов'язкових полів (ім'я, email) з повідомленням зі словника;
@@ -75,7 +75,7 @@ function init(): void {
   const required = d.required ?? '';
   const emailInvalid = d.emailInvalid ?? '';
   const negotiable = d.negotiable ?? '';
-  // Фіксована ціна купівлі портрета («Купити») — з `data-portrait-price` (400 у.о.).
+  // Стандартна ціна купівлі («Купити») — з `data-portrait-price`.
   const portraitPrice = d.portraitPrice ? Number(d.portraitPrice) : null;
 
   let mode: Mode | null = null; // null — форма закрита
@@ -123,7 +123,7 @@ function init(): void {
 
     // Режим-залежні блоки: для «Купити» не потрібні ні вибір розміру, ні фото
     // (disabled — щоб поля не потрапили в FormData). Рядок ціни лишається:
-    // купівля — фіксована ціна PORTRAIT_PRICE (400 у.о.).
+    // купівля — ціна з конфігу готових робіт.
     const isBuy = next === 'buy';
     sizesBlock.hidden = isBuy;
     sizeInputs.forEach((input) => (input.disabled = isBuy));
@@ -193,8 +193,9 @@ function init(): void {
     if (target.closest('[data-order-button]')) {
       open('order', workName, null);
     } else if (target.closest('[data-buy-button]')) {
-      // «Купити» — фіксована ціна портрета (PORTRAIT_PRICE, 400 у.о.).
-      open('buy', workName, portraitPrice);
+      const buyButton = target.closest<HTMLElement>('[data-buy-button]');
+      const price = buyButton?.dataset.buyPrice ? Number(buyButton.dataset.buyPrice) : portraitPrice;
+      open('buy', workName, Number.isFinite(price) ? price : portraitPrice);
     }
   });
 

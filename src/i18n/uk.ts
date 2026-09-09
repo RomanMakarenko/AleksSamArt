@@ -48,6 +48,8 @@ export const uk: Dictionary = {
     size: 'Розмір',
     comment: 'Коментар',
     price: 'Ціна',
+    peopleHint: '{count} людина на портреті',
+    peopleLegend: '* 1 — одна людина, 2 — дві людини на портреті.',
     customSize: 'Свій розмір',
     negotiablePrice: 'ціна договірна',
     photo: 'Фото',

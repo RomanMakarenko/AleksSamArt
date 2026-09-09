@@ -48,6 +48,8 @@ export const cs: Dictionary = {
     size: 'Rozměr',
     comment: 'Komentář',
     price: 'Cena',
+    peopleHint: '{count} osoba na portrétu',
+    peopleLegend: '* 1 — jedna osoba, 2 — dvě osoby na portrétu.',
     customSize: 'Vlastní rozměr',
     negotiablePrice: 'cena dohodou',
     photo: 'Fotka',

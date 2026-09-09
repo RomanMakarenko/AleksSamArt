@@ -48,6 +48,8 @@ export const sv: Dictionary = {
     size: 'Storlek',
     comment: 'Kommentar',
     price: 'Pris',
+    peopleHint: '{count} person i porträttet',
+    peopleLegend: '* 1 — en person, 2 — två personer i porträttet.',
     customSize: 'Egen storlek',
     negotiablePrice: 'pris enligt överenskommelse',
     photo: 'Foto',

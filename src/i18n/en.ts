@@ -48,6 +48,8 @@ export const en: Dictionary = {
     size: 'Size',
     comment: 'Comment',
     price: 'Price',
+    peopleHint: '{count} person in the portrait',
+    peopleLegend: '* 1 — one person, 2 — two people in the portrait.',
     customSize: 'Custom size',
     negotiablePrice: 'negotiable price',
     photo: 'Photo',

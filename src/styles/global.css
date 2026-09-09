@@ -753,6 +753,20 @@ html.scroll-locked {
   white-space: nowrap;
 }
 
+.order-form__people-count {
+  color: var(--color-text-muted);
+  font-size: 0.85em;
+  cursor: help;
+}
+
+.order-form__people-legend {
+  grid-column: 1 / -1;
+  margin: -0.15rem 0 0.1rem;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
 .order-form__price {
   display: flex;
   align-items: baseline;
@@ -787,10 +801,85 @@ html.scroll-locked {
   width: 100%;
 }
 
-/* Вузькі екрани: сітка розмірів в один стовпець — текст цін (nowrap) не виходить за край. */
-@media (max-width: 400px) {
+/* Мобільні екрани: діалог займає доступну ширину, а варіанти розміру
+   стають вертикальними, щоб підписи та ціни не стискалися. */
+@media (max-width: 700px) {
+  .order-modal {
+    align-items: start;
+    padding: 0.5rem;
+  }
+
+  .order-modal__dialog {
+    width: 100%;
+    margin: 0.5rem auto;
+    padding: 2.75rem 1rem 1rem;
+    border-radius: 12px;
+  }
+
+  .order-modal__title {
+    max-width: calc(100% - 2rem);
+    font-size: 1.2rem;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+  }
+
+  .order-form {
+    gap: 0.8rem;
+    margin-top: 0.9rem;
+  }
+
+  .order-form__input,
+  .order-form__textarea {
+    min-width: 0;
+    font-size: 16px; /* iOS не збільшує сторінку при фокусі. */
+  }
+
   .order-form__size-grid {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .order-form__size {
+    min-width: 0;
+    padding: 0.65rem 0.7rem;
+  }
+
+  .order-form__size-label {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .order-form__size-price {
+    font-size: 0.95rem;
+  }
+
+  .order-form__input[type='file'] {
+    max-width: 100%;
+    overflow: hidden;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .order-form__input[type='file']::file-selector-button {
+    margin-right: 0.4rem;
+    padding: 0.25rem 0.55rem;
+    font-size: 0.85rem;
+  }
+
+  .order-form__submit {
+    min-height: 2.75rem;
+  }
+}
+
+/* На дуже вузьких екранах ціна переходить під назву, щоб рядок не стискався. */
+@media (max-width: 360px) {
+  .order-form__size {
+    flex-wrap: wrap;
+  }
+
+  .order-form__size-price {
+    width: 100%;
+    margin-left: 1.65rem;
   }
 }
 

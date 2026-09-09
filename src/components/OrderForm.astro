@@ -3,11 +3,10 @@
  * Модальна форма «Замовити»/«Купити» (етап 5).
  *
  * Рендериться один раз на сторінці (у `Home.astro`). Два потоки:
- *  - **«Замовити»** — вибір розміру (A4/A3/A2 → ціна з `src/config`) або
- *    «Свій розмір» (ціна договірна); обов'язкове фото — потрібне для
- *    замовлення та точної ціни.
- *  - **«Купити»** — купівля готової роботи: фіксована ціна `PORTRAIT_PRICE`
- *    (400 у.о.), без вибору розміру та завантаження фото.
+ *  - **«Замовити»** — вибір формату та кількості людей (ціна з `src/config`);
+ *    обов'язкове фото — потрібне для замовлення та точної ціни.
+ *  - **«Купити»** — купівля готової роботи: ціна з `ARTWORK_PRICES` або
+ *    стандартна `PORTRAIT_PRICE`, без вибору розміру та завантаження фото.
  *
  * Відкривається кнопками `[data-order-button]` / `[data-buy-button]` у WorkCard
  * (назва роботи — з `data-work-name` картки, фіксована ціна «Купити» — з
@@ -111,10 +110,16 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
                 data-size-price={size.price}
                 checked={size.id === defaultSizeId}
               />
-              <span class="order-form__size-label">{size.label}</span>
+              <span class="order-form__size-label">
+                {size.label}
+                <span class="order-form__people-count" title={t.form.peopleHint.replace('{count}', String(size.people))}>
+                  ({size.people})
+                </span>
+              </span>
               <span class="order-form__size-price">{formatPrice(size.price)}</span>
             </label>
           ))}
+          <p class="order-form__people-legend">{t.form.peopleLegend}</p>
           <label class="order-form__size">
             <input type="radio" name="size" value={CUSTOM_SIZE_ID} data-size-custom />
             <span class="order-form__size-label">{t.form.customSize}</span>

@@ -24,29 +24,29 @@ export const SOCIAL_LINKS: { facebook: string; instagram: string } = {
 /** Валюта цін. Дефолт USD (умовні одиниці), змінюється через env CURRENCY. */
 export const CURRENCY = CURRENCY_ENV;
 
-/** Розміри/ціни для потоку «Замовити» (тимчасові дефолти з CLAUDE.md). */
+/** Розміри/ціни для потоку «Замовити»: формат і кількість людей. */
 export const ORDER_SIZES = [
-  { id: 'A4', label: 'A4', price: 100 },
-  { id: 'A3', label: 'A3', price: 200 },
-  { id: 'A2', label: 'A2', price: 300 },
+  { id: 'A4-1', label: 'A4', people: 1, price: 50 },
+  { id: 'A4-2', label: 'A4', people: 2, price: 70 },
+  { id: 'A3-1', label: 'A3', people: 1, price: 100 },
+  { id: 'A3-2', label: 'A3', people: 2, price: 140 },
 ] as const;
 
 /** Спеціальний варіант розміру у формі «Замовити»: свій розмір → ціна договірна. */
 export const CUSTOM_SIZE_ID = 'custom' as const;
 
-/**
- * Фіксована ціна потоку «Купити» (готова робота): форма без вибору розміру
- * та без завантаження фото, ціна завжди 400 у.о.
- */
-export const PORTRAIT_PRICE = 400;
+/** Фіксована ціна готових робіт, якщо для роботи немає окремої ціни. */
+export const PORTRAIT_PRICE = 160;
 
-/** Форматує ціну: «100 USD» (валюта — з env CURRENCY). */
+/** Форматує ціну (валюта — з env CURRENCY). */
 export function formatPrice(price: number): string {
   return `${price} ${CURRENCY}`;
 }
 
-/** Ціни готових робіт: назва папки → ціна. Поки порожня (заповниться пізніше). */
-export const ARTWORK_PRICES: Record<string, number> = {};
+/** Ціни готових робіт: назва папки → ціна. */
+export const ARTWORK_PRICES: Record<string, number> = {
+  'Robbie Williams': 300,
+};
 
 /** Email для замовлень (Netlify Forms) — з env CONTACT_EMAIL. */
 export const CONTACT_EMAIL = CONTACT_EMAIL_ENV;
