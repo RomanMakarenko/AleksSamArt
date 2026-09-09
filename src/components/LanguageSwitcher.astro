@@ -1,5 +1,5 @@
 ---
-import { LOCALES, LOCALE_NAMES, type Locale } from '../i18n';
+import { MENU_LOCALES, LOCALE_NAMES, type Locale } from '../i18n';
 import type { Dictionary } from '../i18n';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 
@@ -16,7 +16,7 @@ const { currentLang, t } = Astro.props;
   за Accept-Language (див. скрипт у BaseLayout), щоб не «перемикало» користувача назад.
 -->
 <nav class="lang-switcher" aria-label={t.langSwitcher.label} data-lang-switcher>
-  {LOCALES.map((locale) => (
+  {MENU_LOCALES.map((locale) => (
     <a
       href={getRelativeLocaleUrl(locale)}
       hreflang={locale}

@@ -16,6 +16,9 @@ export type { Dictionary } from './dictionary';
 export const LOCALES = ['uk', 'en', 'de', 'fr', 'es', 'it', 'no', 'pl', 'sv', 'cs'] as const;
 export type Locale = (typeof LOCALES)[number];
 
+/** Локалі, доступні для ручного вибору в меню. */
+export const MENU_LOCALES = ['uk', 'en', 'de', 'fr', 'es', 'it', 'sv'] as const satisfies readonly Locale[];
+
 /** Дефолтна локаль — на корені `/` без префікса. */
 export const DEFAULT_LOCALE: Locale = 'uk';
 
