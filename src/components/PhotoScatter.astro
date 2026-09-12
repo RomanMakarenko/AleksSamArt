@@ -13,6 +13,8 @@
  * Анімація (легке «плавання» + паралакс при скролі) — у `src/lib/gallery.ts`,
  * який читає `[data-scatter]`, `[data-scatter-item]` та `data-rot`.
  */
+import { getImage } from 'astro:assets';
+import penelopeCruz from '../assets/home/Penelope Cruz-1.jpg';
 import type { Work } from '../lib/works';
 
 interface Props {
@@ -20,6 +22,12 @@ interface Props {
 }
 
 const { works } = Astro.props;
+const { src: penelopeThumb } = await getImage({
+  src: penelopeCruz,
+  width: 420,
+  format: 'webp',
+  quality: 80,
+});
 
 /**
  * Слоти розкиду: `left`/`top` у % екрана, `width` у vmin, `rot` у градусах.
@@ -45,23 +53,20 @@ const SLOTS = [
  * Точне розкладання колажа: назва папки роботи (як на картці, без префікса
  * `ORDER-`) → слот. Слоти, не згадані тут, лишаються порожніми — вільні
  * позиції НЕ заповнюються іншими роботами; роботи без слота в колаж не
- * потрапляють (напр. клієнтські замовлення Girl і Red-haired girl).
+ * потрапляють у стартовий фон.
  *
- * Поточне розкладання: Elon Musk — на місці Girl (слот 7), Lenny Kravitz —
- * на місці Red-haired girl (слот 9); старі позиції Elon Musk (11) і
- * Lenny Kravitz (4) порожні, решта робіт не зсувається.
+ * Penelope Cruz займає слот 2, де раніше була Girl with a baby. Elon Musk —
+ * на місці Girl (слот 7), Lenny Kravitz — на місці Red-haired girl (слот 9).
  */
 const SLOT_FOR: Record<string, number> = {
   'Robbie Williams': 0,
   'Dua Lipa': 1,
-  'Girl with a baby': 2,
   'Zendaya': 3,
   'Valerii Zaluzhnyi': 5,
   'Drew Barrymore': 6,
   'Elon Musk': 7, // місце Girl — права верхня зона
   'Racer': 8,
   'Lenny Kravitz': 9, // місце Red-haired girl — правий нижній край
-  'Guy': 10,
 };
 
 /**
@@ -70,21 +75,32 @@ const SLOT_FOR: Record<string, number> = {
  * Зсув — через `top` у media-запиті `global.css` (`[data-scatter-lower]`),
  * тому з анімацією GSAP (transform) не конфліктує.
  */
-const LOWER_ON_MOBILE: ReadonlySet<string> = new Set(['Girl with a baby', 'Racer']);
+const LOWER_ON_MOBILE: ReadonlySet<string> = new Set(['Penelope Cruz', 'Racer']);
 
-// Побудова колажа: кожна робота з мапи → свій слот; порожні слоти не показуємо.
-const placed: { src: string; slot: number; lower: boolean }[] = [];
+// Основні роботи беруться з мапи, а Penelope замінює Girl with a baby
+// у другому слоті лише в intro-колажі — картка замовлення не змінюється.
+const placed: { src: string; slot: number; lower: boolean; dua: boolean }[] = [{
+  src: penelopeThumb,
+  slot: 2,
+  lower: true,
+  dua: false,
+}];
 for (const work of works) {
   if (!work.thumb) continue;
   const slot = SLOT_FOR[work.name];
   if (slot === undefined) continue;
-  placed.push({ src: work.thumb, slot, lower: LOWER_ON_MOBILE.has(work.name) });
+  placed.push({
+    src: work.thumb,
+    slot,
+    lower: LOWER_ON_MOBILE.has(work.name),
+    dua: work.name === 'Dua Lipa',
+  });
 }
 ---
 
 <div class="scatter" data-scatter aria-hidden="true">
   <div class="scatter__overlay"></div>
-  {placed.map(({ src, slot: slotIdx, lower }) => {
+  {placed.map(({ src, slot: slotIdx, lower, dua }) => {
     const slot = SLOTS[slotIdx];
     return (
       <img
@@ -94,9 +110,10 @@ for (const work of works) {
         loading="lazy"
         decoding="async"
         fetchpriority="low"
-        style={`left:${slot.left}%;top:${slot.top}%;width:${slot.width}vmin;transform:rotate(${slot.rot}deg)`}
+        style={`left:${slot.left}%;top:${slot.top}%;width:${slot.width * 1.2}vmin;transform:rotate(${slot.rot}deg)`}
         data-rot={slot.rot}
         data-scatter-item
+        data-scatter-dua={dua ? '' : undefined}
         data-scatter-lower={lower ? '' : undefined}
       />
     );

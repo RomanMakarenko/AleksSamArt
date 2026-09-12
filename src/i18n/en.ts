@@ -8,7 +8,7 @@ export const en: Dictionary = {
       'pencil portrait, portrait on commission, pencil drawing, portrait gift, artist portrait, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio of artist AleksSamArt',
+    tagline: 'Portfolio of artist Aleks Sam art',
     subtitle: 'Order a custom painting or buy an existing artwork.',
   },
   about: {

@@ -144,8 +144,7 @@ img {
 
 .scatter__item {
   position: absolute;
-  aspect-ratio: 3 / 4; /* рівномірні «картки», обрізання по центру */
-  object-fit: cover;
+  height: auto; /* зберігаємо природні пропорції роботи без кропінгу */
   border-radius: 6px;
   box-shadow: 0 10px 28px rgb(0 0 0 / 0.35);
   opacity: 0.65; /* «заглушений» фон — частина роботи оверлея */
@@ -167,9 +166,25 @@ img {
 /* Вузькі екрани: окремі фото (~45% висоти) запливають на перемикач мови —
    зсуваємо їх нижче. `top` перебиває inline-стиль (`!important`); `left`/`width`
    та нахил лишаємо, бо зсувається лише вертикаль. */
+@media (min-width: 769px) {
+  /* Dua Lipa переходить у правий верхній кут лише на desktop. */
+  .scatter__item[data-scatter-dua] {
+    left: 88% !important;
+    top: 8% !important;
+    width: 19.2vmin !important;
+  }
+}
+
 @media (max-width: 768px) {
   .scatter__item[data-scatter-lower] {
     top: 58% !important;
+  }
+
+  /* На мобільному Dua лишається у початковому слоті. */
+  .scatter__item[data-scatter-dua] {
+    left: 16% !important;
+    top: 20% !important;
+    width: 18vmin !important;
   }
 }
 

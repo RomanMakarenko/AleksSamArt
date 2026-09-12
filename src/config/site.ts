@@ -12,7 +12,7 @@ import {
 
 /** Бренд — не перекладається. Локалізовані тексти — у словниках `src/i18n/`. */
 export const SITE = {
-  title: 'AleksSamArt',
+  title: 'Aleks Sam art',
 };
 
 /** Соцмережі — з env (FACEBOOK_URL / INSTAGRAM_URL). */
@@ -35,8 +35,8 @@ export const ORDER_SIZES = [
 /** Спеціальний варіант розміру у формі «Замовити»: свій розмір → ціна договірна. */
 export const CUSTOM_SIZE_ID = 'custom' as const;
 
-/** Фіксована ціна готових робіт, якщо для роботи немає окремої ціни. */
-export const PORTRAIT_PRICE = 160;
+/** Ціна готового фан-арту формату A4 за замовчуванням. */
+export const PORTRAIT_PRICE = 100;
 
 /** Форматує ціну (валюта — з env CURRENCY). */
 export function formatPrice(price: number): string {
@@ -45,7 +45,9 @@ export function formatPrice(price: number): string {
 
 /** Ціни готових робіт: назва папки → ціна. */
 export const ARTWORK_PRICES: Record<string, number> = {
-  'Robbie Williams': 300,
+  'Robbie Williams': 200,
+  'Drew Barrymore': 150,
+  'Dua Lipa': 150,
 };
 
 /** Email для замовлень (Netlify Forms) — з env CONTACT_EMAIL. */

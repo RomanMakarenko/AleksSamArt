@@ -3,6 +3,15 @@ import { defineConfig, envField } from 'astro/config';
 
 // TODO(етап 6): заповнити `site` реальним URL після деплою (потрібно для sitemap/hreflang).
 export default defineConfig({
+  // Локальний passthrough-сервіс не вимагає Sharp, тому зображення доступні
+  // у dev-середовищі одразу з `src/assets/works/`. На production оптимізація
+  // може бути увімкнена через Sharp у середовищі деплою.
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/noop',
+    },
+  },
+
   i18n: {
     defaultLocale: 'uk',
     locales: ['uk', 'en', 'de', 'fr', 'es', 'it', 'no', 'pl', 'sv', 'cs'],
