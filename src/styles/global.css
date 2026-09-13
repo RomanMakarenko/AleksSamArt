@@ -186,6 +186,11 @@ img {
     top: 20% !important;
     width: 18vmin !important;
   }
+
+  /* Valerii Zaluzhnyi зміщується праворуч на 87px лише на мобільному. */
+  .scatter__item[data-scatter-valerii] {
+    margin-left: 87px;
+  }
 }
 
 /* ── Екран «Про автора» ────────────────────────────────────────────────── */

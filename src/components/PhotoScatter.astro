@@ -79,11 +79,12 @@ const LOWER_ON_MOBILE: ReadonlySet<string> = new Set(['Penelope Cruz', 'Racer'])
 
 // Основні роботи беруться з мапи, а Penelope замінює Girl with a baby
 // у другому слоті лише в intro-колажі — картка замовлення не змінюється.
-const placed: { src: string; slot: number; lower: boolean; dua: boolean }[] = [{
+const placed: { src: string; slot: number; lower: boolean; dua: boolean; valerii: boolean }[] = [{
   src: penelopeThumb,
   slot: 2,
   lower: true,
   dua: false,
+  valerii: false,
 }];
 for (const work of works) {
   if (!work.thumb) continue;
@@ -94,13 +95,14 @@ for (const work of works) {
     slot,
     lower: LOWER_ON_MOBILE.has(work.name),
     dua: work.name === 'Dua Lipa',
+    valerii: work.name === 'Valerii Zaluzhnyi',
   });
 }
 ---
 
 <div class="scatter" data-scatter aria-hidden="true">
   <div class="scatter__overlay"></div>
-  {placed.map(({ src, slot: slotIdx, lower, dua }) => {
+  {placed.map(({ src, slot: slotIdx, lower, dua, valerii }) => {
     const slot = SLOTS[slotIdx];
     return (
       <img
@@ -114,6 +116,7 @@ for (const work of works) {
         data-rot={slot.rot}
         data-scatter-item
         data-scatter-dua={dua ? '' : undefined}
+        data-scatter-valerii={valerii ? '' : undefined}
         data-scatter-lower={lower ? '' : undefined}
       />
     );
