@@ -15,6 +15,7 @@
  */
 import { getImage } from 'astro:assets';
 import penelopeCruz from '../assets/home/Penelope Cruz-1.jpg';
+import racerCover from '../assets/home/Racer-1.jpg';
 import type { Work } from '../lib/works';
 
 interface Props {
@@ -24,6 +25,12 @@ interface Props {
 const { works } = Astro.props;
 const { src: penelopeThumb } = await getImage({
   src: penelopeCruz,
+  width: 420,
+  format: 'webp',
+  quality: 80,
+});
+const { src: racerThumb } = await getImage({
+  src: racerCover,
   width: 420,
   format: 'webp',
   quality: 80,
@@ -77,17 +84,26 @@ const SLOT_FOR: Record<string, number> = {
  */
 const LOWER_ON_MOBILE: ReadonlySet<string> = new Set(['Penelope Cruz', 'Racer']);
 
-// Основні роботи беруться з мапи, а Penelope замінює Girl with a baby
-// у другому слоті лише в intro-колажі — картка замовлення не змінюється.
-const placed: { src: string; slot: number; lower: boolean; dua: boolean; valerii: boolean }[] = [{
-  src: penelopeThumb,
-  slot: 2,
-  lower: true,
-  dua: false,
-  valerii: false,
-}];
+// Основні роботи беруться з мапи, а Penelope і Racer використовують
+// окремі титульні фото лише в intro-колажі — картки замовлень не змінюються.
+const placed: { src: string; slot: number; lower: boolean; dua: boolean; valerii: boolean }[] = [
+  {
+    src: penelopeThumb,
+    slot: 2,
+    lower: true,
+    dua: false,
+    valerii: false,
+  },
+  {
+    src: racerThumb,
+    slot: 8,
+    lower: true,
+    dua: false,
+    valerii: false,
+  },
+];
 for (const work of works) {
-  if (!work.thumb) continue;
+  if (!work.thumb || work.name === 'Racer') continue;
   const slot = SLOT_FOR[work.name];
   if (slot === undefined) continue;
   placed.push({
