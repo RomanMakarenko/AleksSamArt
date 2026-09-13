@@ -8,7 +8,7 @@ export const de: Dictionary = {
       'Bleistiftporträt, Porträt auf Bestellung, Bleistiftzeichnung, Porträt als Geschenk, Künstlerporträt, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio des Künstlers AleksSamArt',
+    tagline: 'Portfolio der Künstlerin Aleks Sam',
     subtitle: 'Ein individuelles Gemälde bestellen oder ein fertiges Werk kaufen.',
   },
   about: {

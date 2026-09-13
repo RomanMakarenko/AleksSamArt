@@ -8,7 +8,7 @@ export const it: Dictionary = {
       'ritratto a matita, ritratto su ordinazione, disegno a matita, ritratto regalo, ritratto d’artista, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio dell’artista AleksSamArt',
+    tagline: 'Portfolio dell’artista Aleks Sam',
     subtitle: 'Ordina un quadro su misura o acquista un’opera esistente.',
   },
   about: {

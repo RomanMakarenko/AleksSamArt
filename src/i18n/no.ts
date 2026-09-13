@@ -8,7 +8,7 @@ export const no: Dictionary = {
       'blyantportrett, portrett på bestilling, blyanttegning, portrett gave, kunstnerportrett, AleksSamArt',
   },
   hero: {
-    tagline: 'Portefølje til kunstneren AleksSamArt',
+    tagline: 'Portefølje til kunstneren Aleks Sam',
     subtitle: 'Bestill et personlig maleri eller kjøp et ferdig verk.',
   },
   about: {

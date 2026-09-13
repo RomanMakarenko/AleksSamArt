@@ -8,7 +8,7 @@ export const cs: Dictionary = {
       'portrét tužkou, portrét na zakázku, kresba tužkou, portrét jako dárek, umělecký portrét, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio umělce AleksSamArt',
+    tagline: 'Portfolio umělkyně Aleks Sam',
     subtitle: 'Objednejte individuální obraz nebo kupte hotové dílo.',
   },
   about: {

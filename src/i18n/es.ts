@@ -8,7 +8,7 @@ export const es: Dictionary = {
       'retrato a lápiz, retrato por encargo, dibujo a lápiz, retrato regalo, retrato de artista, AleksSamArt',
   },
   hero: {
-    tagline: 'Portafolio del artista AleksSamArt',
+    tagline: 'Portafolio de la artista Aleks Sam',
     subtitle: 'Encarga un cuadro a medida o compra una obra existente.',
   },
   about: {

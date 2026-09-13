@@ -8,7 +8,7 @@ export const fr: Dictionary = {
       'portrait au crayon, portrait sur commande, dessin au crayon, portrait cadeau, portrait d’artiste, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio de l’artiste AleksSamArt',
+    tagline: 'Portfolio de l’artiste Aleks Sam',
     subtitle: 'Commander un tableau sur mesure ou acheter une œuvre existante.',
   },
   about: {

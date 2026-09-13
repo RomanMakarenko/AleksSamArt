@@ -8,7 +8,7 @@ export const pl: Dictionary = {
       'portret ołówkiem, portret na zamówienie, rysunek ołówkiem, portret w prezencie, portret artysty, AleksSamArt',
   },
   hero: {
-    tagline: 'Portfolio artysty AleksSamArt',
+    tagline: 'Portfolio artystki Aleks Sam',
     subtitle: 'Zamów indywidualny obraz lub kup gotowe dzieło.',
   },
   about: {
