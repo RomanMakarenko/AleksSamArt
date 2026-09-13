@@ -46,6 +46,7 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
   data-required={t.form.required}
   data-email-invalid={t.form.emailInvalid}
   data-negotiable={t.form.negotiablePrice}
+  data-artwork-format={t.form.artworkFormat}
   data-portrait-price={PORTRAIT_PRICE}
 >
   <div class="order-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
@@ -131,6 +132,7 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
       <div class="order-form__price" data-order-price-row>
         <span class="order-form__price-label">{t.form.price}:</span>
         <strong class="order-form__price-value" data-order-price-value></strong>
+        <span class="order-form__format" data-order-format></span>
       </div>
 
       <!-- Фото потрібне: для замовлення та точної ціни (свій розмір/портрет). -->

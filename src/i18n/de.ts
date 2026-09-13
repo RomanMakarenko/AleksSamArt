@@ -48,6 +48,7 @@ export const de: Dictionary = {
     size: 'Größe',
     comment: 'Kommentar',
     price: 'Preis',
+    artworkFormat: '* Porträtformat: {format}',
     peopleHint: '{count} Person im Porträt',
     peopleLegend: '* 1 — eine Person, 2 — zwei Personen im Porträt.',
     customSize: 'Eigene Größe',

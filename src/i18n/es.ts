@@ -48,6 +48,7 @@ export const es: Dictionary = {
     size: 'Tamaño',
     comment: 'Comentario',
     price: 'Precio',
+    artworkFormat: '* Formato del retrato: {format}',
     peopleHint: '{count} persona en el retrato',
     peopleLegend: '* 1 — una persona, 2 — dos personas en el retrato.',
     customSize: 'Tamaño personalizado',

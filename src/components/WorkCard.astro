@@ -16,7 +16,7 @@
  */
 import type { Work } from '../lib/works';
 import type { Dictionary } from '../i18n';
-import { ARTWORK_PRICES, PORTRAIT_PRICE } from '../config/site';
+import { ARTWORK_PRICES, PORTRAIT_PRICE, getArtworkFormat } from '../config/site';
 
 interface Props {
   work: Work;
@@ -27,6 +27,7 @@ interface Props {
 
 const { work, t, index } = Astro.props;
 const artworkPrice = ARTWORK_PRICES[work.id] ?? ARTWORK_PRICES[work.name] ?? PORTRAIT_PRICE;
+const artworkFormat = getArtworkFormat(work.id, work.name);
 
 // Рамка — тригер лайтбокса лише коли є хоча б одне фото (головне або галерея).
 const hasPhotos = Boolean(work.mainImage) || work.gallery.length > 0;
@@ -79,14 +80,17 @@ const openAttrs = hasPhotos
       <!-- «Купити» — усі роботи, крім замовлень (немає бейджа «Замовлення»):
            форма купівлі готової роботи з ціною з конфігу, без розміру та фото. -->
       {!work.isOrder && (
-        <button
-          type="button"
-          class="btn btn--buy"
-          data-buy-button
-          data-buy-price={artworkPrice}
-        >
-          {t.work.buyButton}
-        </button>
+        <>
+          <button
+            type="button"
+            class="btn btn--buy"
+            data-buy-button
+            data-buy-price={artworkPrice}
+            data-buy-format={artworkFormat}
+          >
+            {t.work.buyButton}
+          </button>
+        </>
       )}
     </div>
   </div>

@@ -48,6 +48,7 @@ function init(): void {
   // Усі елементи гарантовані статичною розміткою `OrderForm.astro` — non-null.
   const sizeInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="size"]'));
   const priceValue = form.querySelector<HTMLElement>('[data-order-price-value]')!;
+  const formatValue = form.querySelector<HTMLElement>('[data-order-format]')!;
   const priceRow = form.querySelector<HTMLElement>('[data-order-price-row]')!;
   const sizesBlock = form.querySelector<HTMLElement>('[data-order-sizes]')!;
   const photoBlock = form.querySelector<HTMLElement>('[data-order-photo]')!;
@@ -75,12 +76,14 @@ function init(): void {
   const required = d.required ?? '';
   const emailInvalid = d.emailInvalid ?? '';
   const negotiable = d.negotiable ?? '';
+  const artworkFormat = d.artworkFormat ?? '';
   // Стандартна ціна купівлі («Купити») — з `data-portrait-price`.
   const portraitPrice = d.portraitPrice ? Number(d.portraitPrice) : null;
 
   let mode: Mode | null = null; // null — форма закрита
   let trigger: HTMLElement | null = null; // кнопка, з якої відкрили
   let buyPrice: number | null = null;
+  let buyFormat = '';
 
   /** Форматує ціну з валютою: «100 USD». */
   function formatPrice(price: number): string {
@@ -101,20 +104,23 @@ function init(): void {
     if (mode === 'buy') {
       const price = formatPrice(buyPrice ?? 0);
       priceValue.textContent = price;
+      formatValue.textContent = artworkFormat.replace('{format}', buyFormat);
       submitBtn.textContent = buyWithPrice.replace('{price}', price);
       return;
     }
     const price = selectedSizePrice();
     priceValue.textContent = price === null ? negotiable : formatPrice(price);
+    formatValue.textContent = '';
     submitBtn.textContent = submitOrder;
   }
 
   /** Відкриває форму в режимі `next` для роботи `workName`; `price` — для «Купити». */
-  function open(next: Mode, workName: string, price: number | null): void {
+  function open(next: Mode, workName: string, price: number | null, format = ''): void {
     if (mode !== null) return; // вже відкрита
     mode = next;
     trigger = document.activeElement as HTMLElement;
     buyPrice = price;
+    buyFormat = format;
 
     titleEl.textContent = next === 'order' ? orderTitle : buyTitle;
     workInput.value = workName;
@@ -195,7 +201,8 @@ function init(): void {
     } else if (target.closest('[data-buy-button]')) {
       const buyButton = target.closest<HTMLElement>('[data-buy-button]');
       const price = buyButton?.dataset.buyPrice ? Number(buyButton.dataset.buyPrice) : portraitPrice;
-      open('buy', workName, Number.isFinite(price) ? price : portraitPrice);
+      const format = buyButton?.dataset.buyFormat ?? '';
+      open('buy', workName, Number.isFinite(price) ? price : portraitPrice, format);
     }
   });
 

@@ -50,5 +50,17 @@ export const ARTWORK_PRICES: Record<string, number> = {
   'Dua Lipa': 150,
 };
 
+export type ArtworkFormat = 'A4' | 'A3';
+
+/** Формати готових робіт: за замовчуванням A4, окремі роботи — A3. */
+export const ARTWORK_FORMATS: Record<string, ArtworkFormat> = {
+  'Drew Barrymore': 'A3',
+  'Dua Lipa': 'A3',
+};
+
+export function getArtworkFormat(workId: string, workName: string): ArtworkFormat {
+  return ARTWORK_FORMATS[workId] ?? ARTWORK_FORMATS[workName] ?? 'A4';
+}
+
 /** Email для замовлень (Netlify Forms) — з env CONTACT_EMAIL. */
 export const CONTACT_EMAIL = CONTACT_EMAIL_ENV;

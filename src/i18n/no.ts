@@ -48,6 +48,7 @@ export const no: Dictionary = {
     size: 'Størrelse',
     comment: 'Kommentar',
     price: 'Pris',
+    artworkFormat: '* Portrettformat: {format}',
     peopleHint: '{count} person i portrettet',
     peopleLegend: '* 1 — én person, 2 — to personer i portrettet.',
     customSize: 'Egen størrelse',
