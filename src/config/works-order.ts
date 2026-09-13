@@ -19,7 +19,7 @@ export const WORKS_ORDER: string[] = [
   'Penelope Cruz',
   'ORDER-Racer',
   'ORDER-Guy',
-  'ORDER-Girl with a baby',
-  'ORDER-Boy',
   'ORDER-Couple',
+  'ORDER-Boy',
+  'ORDER-Girl with a baby',
 ];
