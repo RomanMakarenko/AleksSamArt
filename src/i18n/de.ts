@@ -55,6 +55,11 @@ export const de: Dictionary = {
     negotiablePrice: 'Preis auf Anfrage',
     photo: 'Foto',
     photoHint: 'Fügen Sie ein Foto hinzu — es wird für die Bestellung und einen genauen Preis benötigt.',
+    orderNotes: {
+      framing: '☆ Die Rahmung ist im Preis enthalten.',
+      timing: '☆ Die Fertigstellung dauert je nach Format und Personenanzahl 4 bis 10 Tage.',
+      shipping: '☆ Der Versand wird separat bezahlt.',
+    },
     submitOrder: 'Bestellung senden',
     buyWithPrice: 'Für {price} kaufen',
     success:

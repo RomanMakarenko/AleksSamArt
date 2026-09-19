@@ -21,9 +21,12 @@ const detectScript = `
   var supported = ${JSON.stringify(LOCALES)};
   var wanted = (navigator.languages || [navigator.language || 'uk']).slice();
   for (var i = 0; i < wanted.length; i++) {
-    var code = (wanted[i] || '').split('-')[0].toLowerCase();
+    var raw = (wanted[i] || '').toLowerCase();
+    var code = raw.split('-')[0];
+    // uk та uk-UA лишаються на українській локалі /.
+    if (code === 'uk') return;
     if (supported.indexOf(code) !== -1) {
-      if (code !== 'uk') window.location.replace('/' + code + '/');
+      window.location.replace('/' + code + '/');
       return;
     }
   }
@@ -41,7 +44,7 @@ const detectScript = `
     <!-- TODO(етап 6): meta/OG/hreflang -->
 
     <!--
-      Автовибір мови за мовою браузера (Accept-Language), фолбек — `uk`.
+      Автовибір мови за налаштуваннями браузера, фолбек — `uk`.
       Спрацьовує лише на корені `/` (перший візит) і лише якщо користувач
       ще не обрав мову сам (кука `lang`, яку ставить перемикач).
     -->

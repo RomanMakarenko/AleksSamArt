@@ -77,6 +77,12 @@ export interface Dictionary {
     photo: string;
     /** Підказка під полем фото: для замовлення та точної ціни треба додати фото. */
     photoHint: string;
+    /** Умови оформлення, терміну виконання та доставки. */
+    orderNotes: {
+      framing: string;
+      timing: string;
+      shipping: string;
+    };
     submitOrder: string;
     buyWithPrice: string; // містить {price}
     success: string;

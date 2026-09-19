@@ -55,6 +55,11 @@ export const es: Dictionary = {
     negotiablePrice: 'precio a convenir',
     photo: 'Foto',
     photoHint: 'Añade una foto — es necesaria para el pedido y el precio exacto.',
+    orderNotes: {
+      framing: '☆ El enmarcado está incluido en el precio.',
+      timing: '☆ El trabajo tarda de 4 a 10 días, según el formato y el número de personas.',
+      shipping: '☆ El envío se paga por separado.',
+    },
     submitOrder: 'Enviar pedido',
     buyWithPrice: 'Comprar por {price}',
     success:

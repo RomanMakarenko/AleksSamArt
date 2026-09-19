@@ -16,7 +16,7 @@
  */
 import type { Work } from '../lib/works';
 import type { Dictionary } from '../i18n';
-import { ARTWORK_PRICES, PORTRAIT_PRICE, getArtworkFormat } from '../config/site';
+import { getArtworkFormat, getArtworkPrice } from '../config/site';
 
 interface Props {
   work: Work;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 const { work, t, index } = Astro.props;
-const artworkPrice = ARTWORK_PRICES[work.id] ?? ARTWORK_PRICES[work.name] ?? PORTRAIT_PRICE;
+const artworkPrice = getArtworkPrice(work.id, work.name);
 const artworkFormat = getArtworkFormat(work.id, work.name);
 
 // Рамка — тригер лайтбокса лише коли є хоча б одне фото (головне або галерея).

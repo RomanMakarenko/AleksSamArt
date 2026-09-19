@@ -37,7 +37,22 @@ function init(gallery: HTMLElement): void {
     setupScatter(gallery);
   }
 
+  setupHeroScroll(screens, reduced);
   setupDots(screens);
+}
+
+/** Клік на підказці одразу відкриває першу роботу, оминаючи екран «Про автора». */
+function setupHeroScroll(screens: HTMLElement[], reduced: boolean): void {
+  const hint = document.querySelector<HTMLButtonElement>('[data-hero-scroll]');
+  const firstWork = screens[0];
+  if (!hint || !firstWork) return;
+
+  hint.addEventListener('click', () => {
+    firstWork.scrollIntoView({
+      behavior: reduced ? 'auto' : 'smooth',
+      block: 'start',
+    });
+  });
 }
 
 /** GSAP: картка «піднімається зі стосу» → рівно у фокус → «осідає» назад. */

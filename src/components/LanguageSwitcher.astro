@@ -13,7 +13,7 @@ const { currentLang, t } = Astro.props;
 
 <!--
   Перемикач мови. Клік ставить куку `lang` — вона відключає автовибір мови
-  за Accept-Language (див. скрипт у BaseLayout), щоб не «перемикало» користувача назад.
+  за налаштуваннями браузера (див. скрипт у BaseLayout), щоб не «перемикало» користувача назад.
 -->
 <nav class="lang-switcher" aria-label={t.langSwitcher.label} data-lang-switcher>
   {MENU_LOCALES.map((locale) => (

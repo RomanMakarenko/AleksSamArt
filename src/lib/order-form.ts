@@ -47,16 +47,20 @@ function init(): void {
 
   // Усі елементи гарантовані статичною розміткою `OrderForm.astro` — non-null.
   const sizeInputs = Array.from(form.querySelectorAll<HTMLInputElement>('input[name="size"]'));
+  const sizePriceValues = Array.from(form.querySelectorAll<HTMLElement>('[data-size-price-value]'));
   const priceValue = form.querySelector<HTMLElement>('[data-order-price-value]')!;
   const formatValue = form.querySelector<HTMLElement>('[data-order-format]')!;
   const priceRow = form.querySelector<HTMLElement>('[data-order-price-row]')!;
   const sizesBlock = form.querySelector<HTMLElement>('[data-order-sizes]')!;
   const photoBlock = form.querySelector<HTMLElement>('[data-order-photo]')!;
   const photoInput = form.querySelector<HTMLInputElement>('[data-order-photo-input]')!;
+  const timingNote = modal.querySelector<HTMLElement>('[data-order-timing]')!;
   const emailInput = form.querySelector<HTMLInputElement>('input[name="email"]')!;
   const workInput = form.querySelector<HTMLInputElement>('[data-order-work]')!;
   const modeInput = form.querySelector<HTMLInputElement>('[data-order-mode]')!;
   const priceInput = form.querySelector<HTMLInputElement>('[data-order-price]')!;
+  const currencyInput = form.querySelector<HTMLInputElement>('[data-order-currency]')!;
+  const regionInput = form.querySelector<HTMLInputElement>('[data-order-region]')!;
   const titleEl = modal.querySelector<HTMLElement>('[data-order-title-text]')!;
   const submitBtn = form.querySelector<HTMLButtonElement>('[data-order-submit]')!;
   const errorEl = form.querySelector<HTMLElement>('[data-order-error]')!;
@@ -66,7 +70,11 @@ function init(): void {
 
   // Переклади/параметри з атрибутів модалки (будь-який може бути порожнім).
   const d = modal.dataset;
-  const currency = d.currency ?? '';
+  const currencies = {
+    ua: d.currencyUa ?? 'UAH',
+    international: d.currencyInternational ?? 'EUR',
+  } as const;
+  const artworkCurrency = d.artworkCurrency ?? 'EUR';
   const orderTitle = d.orderTitle ?? '';
   const buyTitle = d.buyTitle ?? '';
   const submitOrder = d.submitOrder ?? '';
@@ -78,16 +86,30 @@ function init(): void {
   const negotiable = d.negotiable ?? '';
   const artworkFormat = d.artworkFormat ?? '';
   // Стандартна ціна купівлі («Купити») — з `data-portrait-price`.
-  const portraitPrice = d.portraitPrice ? Number(d.portraitPrice) : null;
+  let pricingRegion: 'ua' | 'international' = 'international';
 
   let mode: Mode | null = null; // null — форма закрита
   let trigger: HTMLElement | null = null; // кнопка, з якої відкрили
   let buyPrice: number | null = null;
   let buyFormat = '';
 
-  /** Форматує ціну з валютою: «100 USD». */
-  function formatPrice(price: number): string {
+  /** Форматує ціну з валютою: «100 EUR» або «2000 UAH». */
+  function formatPrice(price: number, currency: string): string {
     return `${price} ${currency}`.trim();
+  }
+
+  function browserPricingRegion(): 'ua' | 'international' {
+    const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
+    return languages.some((language) => {
+      const tag = (language || '').toLowerCase();
+      return tag === 'uk' || tag.startsWith('uk-') || /[-_]ua(?:[-_]|$)/.test(tag);
+    })
+      ? 'ua'
+      : 'international';
+  }
+
+  function currencyForMode(): string {
+    return mode === 'buy' ? artworkCurrency : currencies[pricingRegion];
   }
 
   /** Ціна вибраного розміру; null для «Свого розміру» (ціна договірна). */
@@ -95,21 +117,33 @@ function init(): void {
     const checked = sizeInputs.find((input) => input.checked);
     if (!checked) return null;
     if (checked.dataset.sizeCustom !== undefined) return null;
-    const price = Number(checked.dataset.sizePrice);
+    const key = pricingRegion === 'ua' ? 'priceUa' : 'priceInternational';
+    const price = Number(checked.dataset[key]);
     return Number.isFinite(price) ? price : null;
+  }
+
+  function renderSizePrices(): void {
+    const key = pricingRegion === 'ua' ? 'priceUa' : 'priceInternational';
+    sizeInputs.forEach((input, index) => {
+      const value = Number(input.dataset[key]);
+      if (Number.isFinite(value) && sizePriceValues[index]) {
+        sizePriceValues[index].textContent = formatPrice(value, currencies[pricingRegion]);
+      }
+    });
   }
 
   /** Оновлює рядок ціни та текст кнопки сабміту за поточним станом. */
   function renderPrice(): void {
+    renderSizePrices();
     if (mode === 'buy') {
-      const price = formatPrice(buyPrice ?? 0);
+      const price = formatPrice(buyPrice ?? 0, artworkCurrency);
       priceValue.textContent = price;
       formatValue.textContent = artworkFormat.replace('{format}', buyFormat);
       submitBtn.textContent = buyWithPrice.replace('{price}', price);
       return;
     }
     const price = selectedSizePrice();
-    priceValue.textContent = price === null ? negotiable : formatPrice(price);
+    priceValue.textContent = price === null ? negotiable : formatPrice(price, currencies[pricingRegion]);
     formatValue.textContent = '';
     submitBtn.textContent = submitOrder;
   }
@@ -121,11 +155,9 @@ function init(): void {
     trigger = document.activeElement as HTMLElement;
     buyPrice = price;
     buyFormat = format;
+    pricingRegion = browserPricingRegion();
 
     titleEl.textContent = next === 'order' ? orderTitle : buyTitle;
-    workInput.value = workName;
-    modeInput.value = next;
-    priceInput.value = '';
 
     // Режим-залежні блоки: для «Купити» не потрібні ні вибір розміру, ні фото
     // (disabled — щоб поля не потрапили в FormData). Рядок ціни лишається:
@@ -135,10 +167,17 @@ function init(): void {
     sizeInputs.forEach((input) => (input.disabled = isBuy));
     photoBlock.hidden = isBuy;
     photoInput.disabled = isBuy;
+    timingNote.hidden = isBuy;
     priceRow.hidden = false;
 
     // Скидання до початкового стану (перший розмір відмічено в HTML).
     form.reset();
+    // form.reset() також очищує hidden-поля, тому повертаємо контекст заявки.
+    workInput.value = workName;
+    modeInput.value = next;
+    priceInput.value = '';
+    currencyInput.value = currencyForMode();
+    regionInput.value = next === 'buy' ? 'international' : pricingRegion;
     errorEl.hidden = true;
     successPanel.hidden = true;
     form.hidden = false;
@@ -200,9 +239,9 @@ function init(): void {
       open('order', workName, null);
     } else if (target.closest('[data-buy-button]')) {
       const buyButton = target.closest<HTMLElement>('[data-buy-button]');
-      const price = buyButton?.dataset.buyPrice ? Number(buyButton.dataset.buyPrice) : portraitPrice;
+      const price = buyButton?.dataset.buyPrice ? Number(buyButton.dataset.buyPrice) : null;
       const format = buyButton?.dataset.buyFormat ?? '';
-      open('buy', workName, Number.isFinite(price) ? price : portraitPrice, format);
+      if (price !== null && Number.isFinite(price)) open('buy', workName, price, format);
     }
   });
 
@@ -270,8 +309,10 @@ function init(): void {
       return;
     }
 
-    // Приховане поле ціни — під поточний стан (для «Свого розміру» — порожнє).
+    // Приховані поля ціни/валюти — під поточний стан.
     priceInput.value = mode === 'buy' ? String(buyPrice ?? '') : String(selectedSizePrice() ?? '');
+    currencyInput.value = currencyForMode();
+    regionInput.value = mode === 'buy' ? 'international' : pricingRegion;
 
     errorEl.hidden = true;
     submitBtn.disabled = true;

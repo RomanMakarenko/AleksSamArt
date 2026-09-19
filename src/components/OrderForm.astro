@@ -6,7 +6,7 @@
  *  - **«Замовити»** — вибір формату та кількості людей (ціна з `src/config`);
  *    обов'язкове фото — потрібне для замовлення та точної ціни.
  *  - **«Купити»** — купівля готової роботи: ціна з `ARTWORK_PRICES` або
- *    стандартна `PORTRAIT_PRICE`, без вибору розміру та завантаження фото.
+ *    стандартна ціна 50 EUR, без вибору розміру та завантаження фото.
  *
  * Відкривається кнопками `[data-order-button]` / `[data-buy-button]` у WorkCard
  * (назва роботи — з `data-work-name` картки, фіксована ціна «Купити» — з
@@ -20,7 +20,7 @@
  * Клієнтська логіка — `src/lib/order-form.ts` (підключена внизу).
  */
 import type { Dictionary } from '../i18n';
-import { CURRENCY, ORDER_SIZES, CUSTOM_SIZE_ID, PORTRAIT_PRICE, formatPrice } from '../config/site';
+import { ARTWORK_CURRENCY, ORDER_PRICES, ORDER_SIZES, CUSTOM_SIZE_ID } from '../config/site';
 
 interface Props {
   t: Dictionary;
@@ -28,15 +28,18 @@ interface Props {
 
 const { t } = Astro.props;
 
-// За замовчуванням вибраний перший розмір зі списку (A4) — ціна підставиться одразу.
+// За замовчуванням вибраний перший розмір зі списку (A4).
 const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
+const currencyByRegion = { ua: 'UAH', international: 'EUR' } as const;
 ---
 
 <div
   class="order-modal"
   data-order-modal
   aria-hidden="true"
-  data-currency={CURRENCY}
+  data-currency-ua={currencyByRegion.ua}
+  data-currency-international={currencyByRegion.international}
+  data-artwork-currency={ARTWORK_CURRENCY}
   data-order-title={t.form.orderTitle}
   data-buy-title={t.form.buyTitle}
   data-submit-order={t.form.submitOrder}
@@ -47,7 +50,7 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
   data-email-invalid={t.form.emailInvalid}
   data-negotiable={t.form.negotiablePrice}
   data-artwork-format={t.form.artworkFormat}
-  data-portrait-price={PORTRAIT_PRICE}
+  data-pricing-region="international"
 >
   <div class="order-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
     <!-- Кнопка закриття — на ній фокус після відкриття. -->
@@ -85,6 +88,8 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
       <input type="hidden" name="mode" data-order-mode />
       <input type="hidden" name="work" data-order-work />
       <input type="hidden" name="price" data-order-price />
+      <input type="hidden" name="currency" data-order-currency />
+      <input type="hidden" name="pricing-region" data-order-region />
 
       <h2 class="order-modal__title" id="order-modal-title" data-order-title-text></h2>
 
@@ -108,7 +113,8 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
                 type="radio"
                 name="size"
                 value={size.id}
-                data-size-price={size.price}
+                data-price-ua={ORDER_PRICES.ua[size.id]}
+                data-price-international={ORDER_PRICES.international[size.id]}
                 checked={size.id === defaultSizeId}
               />
               <span class="order-form__size-label">
@@ -117,7 +123,9 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
                   ({size.people})
                 </span>
               </span>
-              <span class="order-form__size-price">{formatPrice(size.price)}</span>
+              <span class="order-form__size-price" data-size-price-value>
+                {ORDER_PRICES.international[size.id]} EUR
+              </span>
             </label>
           ))}
           <p class="order-form__people-legend">{t.form.peopleLegend}</p>
@@ -133,6 +141,12 @@ const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
         <span class="order-form__price-label">{t.form.price}:</span>
         <strong class="order-form__price-value" data-order-price-value></strong>
         <span class="order-form__format" data-order-format></span>
+      </div>
+
+      <div class="order-form__notes" role="note">
+        <p>{t.form.orderNotes.framing}</p>
+        <p data-order-timing>{t.form.orderNotes.timing}</p>
+        <p>{t.form.orderNotes.shipping}</p>
       </div>
 
       <!-- Фото потрібне: для замовлення та точної ціни (свій розмір/портрет). -->

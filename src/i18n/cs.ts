@@ -55,6 +55,11 @@ export const cs: Dictionary = {
     negotiablePrice: 'cena dohodou',
     photo: 'Fotka',
     photoHint: 'Přidejte fotografii — je potřeba pro objednávku a přesnou cenu.',
+    orderNotes: {
+      framing: '☆ Zarámování portrétu je zahrnuto v ceně.',
+      timing: '☆ Zhotovení trvá 4 až 10 dní v závislosti na formátu a počtu osob.',
+      shipping: '☆ Doprava se platí zvlášť.',
+    },
     submitOrder: 'Odeslat objednávku',
     buyWithPrice: 'Koupit za {price}',
     success:

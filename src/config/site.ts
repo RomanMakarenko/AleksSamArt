@@ -1,10 +1,10 @@
 /**
  * Центральний конфіг проєкту.
- * Значення, що залежать від env, читаються через `astro:env` (схема в astro.config.mjs).
- * Розміри/ціни — тимчасові дефолти з CLAUDE.md, чекаємо список від користувача.
+ * Значення, що залежать від env, читаються через `astro:env` (схема в
+ * `astro.config.mjs`). Регіональні ціни зберігаються статично, а регіон
+ * відвідувача визначається клієнтом за локаллю браузера/сторінки.
  */
 import {
-  CURRENCY as CURRENCY_ENV,
   CONTACT_EMAIL as CONTACT_EMAIL_ENV,
   FACEBOOK_URL as FACEBOOK_URL_ENV,
   INSTAGRAM_URL as INSTAGRAM_URL_ENV,
@@ -21,34 +21,66 @@ export const SOCIAL_LINKS: { facebook: string; instagram: string } = {
   instagram: INSTAGRAM_URL_ENV,
 };
 
-/** Валюта цін. Дефолт USD (умовні одиниці), змінюється через env CURRENCY. */
-export const CURRENCY = CURRENCY_ENV;
+export type PricingRegion = 'ua' | 'international';
 
-/** Розміри/ціни для потоку «Замовити»: формат і кількість людей. */
+export const PRICING_CURRENCIES: Record<PricingRegion, string> = {
+  ua: 'UAH',
+  international: 'EUR',
+};
+
+/** Варіанти індивідуального замовлення. */
 export const ORDER_SIZES = [
-  { id: 'A4-1', label: 'A4', people: 1, price: 50 },
-  { id: 'A4-2', label: 'A4', people: 2, price: 70 },
-  { id: 'A3-1', label: 'A3', people: 1, price: 100 },
-  { id: 'A3-2', label: 'A3', people: 2, price: 140 },
+  { id: 'A4-1', label: 'A4', people: 1 },
+  { id: 'A4-2', label: 'A4', people: 2 },
+  { id: 'A3-1', label: 'A3', people: 1 },
+  { id: 'A3-2', label: 'A3', people: 2 },
 ] as const;
 
-/** Спеціальний варіант розміру у формі «Замовити»: свій розмір → ціна договірна. */
+export type OrderSizeId = (typeof ORDER_SIZES)[number]['id'];
+
+/** Ціни індивідуальних портретів: Україна — гривні, інші країни — євро. */
+export const ORDER_PRICES: Record<PricingRegion, Record<OrderSizeId, number>> = {
+  ua: {
+    'A4-1': 2000,
+    'A4-2': 3000,
+    'A3-1': 3500,
+    'A3-2': 5000,
+  },
+  international: {
+    'A4-1': 80,
+    'A4-2': 120,
+    'A3-1': 130,
+    'A3-2': 180,
+  },
+};
+
+/** Спеціальний варіант розміру: ціна визначається індивідуально. */
 export const CUSTOM_SIZE_ID = 'custom' as const;
 
-/** Ціна готового фан-арту формату A4 за замовчуванням. */
-export const PORTRAIT_PRICE = 100;
+/** Ціни готових портретів завжди в євро, незалежно від країни. */
+export const ARTWORK_PRICES: Record<string, number> = {
+  'Robbie Williams': 100,
+  'Drew Barrymore': 70,
+  'Dua Lipa': 70,
+};
 
-/** Форматує ціну (валюта — з env CURRENCY). */
-export function formatPrice(price: number): string {
-  return `${price} ${CURRENCY}`;
+/** Базова ціна готового портрета, якщо окремої ціни немає в мапі. */
+export const DEFAULT_ARTWORK_PRICE = 50;
+export const ARTWORK_CURRENCY = 'EUR';
+
+export function getOrderPrice(region: PricingRegion, sizeId: string): number | null {
+  if (!(sizeId in ORDER_PRICES[region])) return null;
+  return ORDER_PRICES[region][sizeId as OrderSizeId];
 }
 
-/** Ціни готових робіт: назва папки → ціна. */
-export const ARTWORK_PRICES: Record<string, number> = {
-  'Robbie Williams': 200,
-  'Drew Barrymore': 150,
-  'Dua Lipa': 150,
-};
+export function getArtworkPrice(workId: string, workName: string): number {
+  return ARTWORK_PRICES[workId] ?? ARTWORK_PRICES[workName] ?? DEFAULT_ARTWORK_PRICE;
+}
+
+/** Форматує ціну з валютою. */
+export function formatPrice(price: number, currency: string): string {
+  return `${price} ${currency}`;
+}
 
 export type ArtworkFormat = 'A4' | 'A3';
 

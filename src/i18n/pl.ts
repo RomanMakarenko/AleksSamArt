@@ -55,6 +55,11 @@ export const pl: Dictionary = {
     negotiablePrice: 'cena do negocjacji',
     photo: 'Zdjęcie',
     photoHint: 'Dodaj zdjęcie — jest potrzebne do zamówienia i dokładnej ceny.',
+    orderNotes: {
+      framing: '☆ Oprawienie portretu w ramę jest wliczone w cenę.',
+      timing: '☆ Realizacja trwa od 4 do 10 dni, w zależności od formatu i liczby osób.',
+      shipping: '☆ Wysyłka jest płatna osobno.',
+    },
     submitOrder: 'Wyślij zamówienie',
     buyWithPrice: 'Kup za {price}',
     success:

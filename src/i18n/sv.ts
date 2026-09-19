@@ -55,6 +55,11 @@ export const sv: Dictionary = {
     negotiablePrice: 'pris enligt överenskommelse',
     photo: 'Foto',
     photoHint: 'Lägg till ett foto — det behövs för beställningen och ett exakt pris.',
+    orderNotes: {
+      framing: '☆ Inramning ingår i priset.',
+      timing: '☆ Utförandet tar 4 till 10 dagar beroende på format och antal personer.',
+      shipping: '☆ Frakten betalas separat.',
+    },
     submitOrder: 'Skicka beställning',
     buyWithPrice: 'Köp för {price}',
     success:

@@ -55,6 +55,11 @@ export const it: Dictionary = {
     negotiablePrice: 'prezzo da concordare',
     photo: 'Foto',
     photoHint: 'Aggiungi una foto — serve per l’ordine e il prezzo esatto.',
+    orderNotes: {
+      framing: '☆ La cornice è inclusa nel prezzo.',
+      timing: '☆ La realizzazione richiede da 4 a 10 giorni, a seconda del formato e del numero di persone.',
+      shipping: '☆ La spedizione si paga separatamente.',
+    },
     submitOrder: 'Invia ordine',
     buyWithPrice: 'Acquista per {price}',
     success:

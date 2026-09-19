@@ -26,11 +26,6 @@ export default defineConfig({
     schema: {
       // Примітка: `description` не входить у тип `envField` цієї версії Astro —
       // опис змінних зберігається в `.env.example` (див. `src/config/site.ts`).
-      CURRENCY: envField.string({
-        context: 'server',
-        access: 'public',
-        default: 'USD',
-      }),
       FACEBOOK_URL: envField.string({
         context: 'server',
         access: 'public',
