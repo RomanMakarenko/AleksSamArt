@@ -99,6 +99,15 @@ function init(): void {
   }
 
   function browserPricingRegion(): 'ua' | 'international' {
+    // Ручний вибір української мови має пріоритет над мовами браузера.
+    // Це важливо, зокрема, для користувача з російською мовою браузера,
+    // який обрав українську локаль на сайті.
+    const selectedLanguage = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith('lang='))
+      ?.slice('lang='.length);
+    if (selectedLanguage === 'uk') return 'ua';
+
     const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
     return languages.some((language) => {
       const tag = (language || '').toLowerCase();
