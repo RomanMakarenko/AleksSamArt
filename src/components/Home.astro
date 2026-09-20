@@ -71,7 +71,7 @@ const hasWorks = works.length > 0;
     <!-- 1 екран = 1 робота. Клік на точці справа — перехід до екрана. -->
     {hasWorks &&
       works.map((work, i) => (
-        <section class="screen screen--work" data-work-screen>
+        <section class="screen screen--work" data-work-screen data-work-index={i}>
           <WorkCard work={work} t={t} index={i} />
         </section>
       ))}

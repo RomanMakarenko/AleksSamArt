@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { DICTIONARIES, type Locale } from '../i18n';
 import { SITE } from '../config/site';
 import { Image } from 'astro:assets';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import frameImage from '../assets/works/ORDER-Girl with a baby/photo-frame.jpg';
 
 interface Props {
@@ -16,7 +17,7 @@ const t = DICTIONARIES[lang];
 <BaseLayout lang={lang} title={`${t.frameInfo.title} · ${SITE.title}`} description={t.frameInfo.description}>
   <main class="frame-info">
     <div class="frame-info__content">
-      <a class="frame-info__back" href={lang === 'uk' ? '/' : `/${lang}/`}>
+      <a class="frame-info__back" href={getRelativeLocaleUrl(lang)} data-frame-info-back>
         ← {t.frameInfo.backToGallery}
       </a>
       <h1 class="frame-info__title">{t.frameInfo.title}</h1>
@@ -27,3 +28,17 @@ const t = DICTIONARIES[lang];
     </div>
   </main>
 </BaseLayout>
+
+<script>
+  import {
+    addReturnToken,
+    currentReturnToken,
+    isValidReturnToken,
+  } from '../lib/order-form-return';
+
+  const back = document.querySelector<HTMLAnchorElement>('[data-frame-info-back]');
+  const token = currentReturnToken();
+  if (back && isValidReturnToken(token)) {
+    back.href = addReturnToken(back.href, token);
+  }
+</script>

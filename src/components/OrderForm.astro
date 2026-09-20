@@ -89,6 +89,7 @@ const currencyByRegion = { ua: 'UAH', international: 'EUR' } as const;
       <input type="hidden" name="form-name" value="order" />
       <input type="hidden" name="mode" data-order-mode />
       <input type="hidden" name="work" data-order-work />
+      <input type="hidden" name="work-id" data-order-work-id />
       <input type="hidden" name="price" data-order-price />
       <input type="hidden" name="currency" data-order-currency />
       <input type="hidden" name="pricing-region" data-order-region />
@@ -151,6 +152,7 @@ const currencyByRegion = { ua: 'UAH', international: 'EUR' } as const;
           <a
             class="order-form__info-link"
             href={getRelativeLocaleUrl(lang, 'info')}
+            data-order-info-link
             aria-label={t.frameInfo.linkLabel}
             title={t.frameInfo.linkLabel}
           >

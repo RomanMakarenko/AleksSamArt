@@ -26,6 +26,18 @@
 /** Режим форми: індивідуальне замовлення або купівля готової роботи. */
 type Mode = 'order' | 'buy';
 
+import {
+  addReturnToken,
+  clearOrderReturn,
+  createReturnToken,
+  currentPathWithoutReturnToken,
+  currentReturnToken,
+  readOrderReturn,
+  removeReturnToken,
+  saveOrderReturn,
+  type ReturnPricingRegion,
+} from './order-form-return';
+
 /**
  * Регекс структури email: local@domain.tld.
  * Локальна частина — літери/цифри/крапка/підкреслення/%/+-; домен — з крапкою;
@@ -61,6 +73,8 @@ function init(): void {
   const priceInput = form.querySelector<HTMLInputElement>('[data-order-price]')!;
   const currencyInput = form.querySelector<HTMLInputElement>('[data-order-currency]')!;
   const regionInput = form.querySelector<HTMLInputElement>('[data-order-region]')!;
+  const workIdInput = form.querySelector<HTMLInputElement>('[data-order-work-id]')!;
+  const infoLink = modal.querySelector<HTMLAnchorElement>('[data-order-info-link]');
   const titleEl = modal.querySelector<HTMLElement>('[data-order-title-text]')!;
   const submitBtn = form.querySelector<HTMLButtonElement>('[data-order-submit]')!;
   const errorEl = form.querySelector<HTMLElement>('[data-order-error]')!;
@@ -85,13 +99,12 @@ function init(): void {
   const emailInvalid = d.emailInvalid ?? '';
   const negotiable = d.negotiable ?? '';
   const artworkFormat = d.artworkFormat ?? '';
-  // Стандартна ціна купівлі («Купити») — з `data-portrait-price`.
-  let pricingRegion: 'ua' | 'international' = 'international';
-
   let mode: Mode | null = null; // null — форма закрита
   let trigger: HTMLElement | null = null; // кнопка, з якої відкрили
+  let workId = '';
   let buyPrice: number | null = null;
   let buyFormat = '';
+  let pricingRegion: ReturnPricingRegion = 'international';
 
   /** Форматує ціну з валютою: «100 EUR» або «2000 UAH». */
   function formatPrice(price: number, currency: string): string {
@@ -158,13 +171,20 @@ function init(): void {
   }
 
   /** Відкриває форму в режимі `next` для роботи `workName`; `price` — для «Купити». */
-  function open(next: Mode, workName: string, price: number | null, format = ''): void {
+  function open(
+    next: Mode,
+    workName: string,
+    price: number | null,
+    format = '',
+    options: { source?: HTMLElement; workId?: string; region?: ReturnPricingRegion; sizeId?: string } = {},
+  ): void {
     if (mode !== null) return; // вже відкрита
     mode = next;
-    trigger = document.activeElement as HTMLElement;
+    trigger = options.source ?? (document.activeElement as HTMLElement);
+    workId = options.workId ?? '';
     buyPrice = price;
     buyFormat = format;
-    pricingRegion = browserPricingRegion();
+    pricingRegion = options.region ?? browserPricingRegion();
 
     titleEl.textContent = next === 'order' ? orderTitle : buyTitle;
 
@@ -181,8 +201,13 @@ function init(): void {
 
     // Скидання до початкового стану (перший розмір відмічено в HTML).
     form.reset();
+    if (options.sizeId && next === 'order') {
+      const restoredSize = sizeInputs.find((input) => input.value === options.sizeId);
+      if (restoredSize) restoredSize.checked = true;
+    }
     // form.reset() також очищує hidden-поля, тому повертаємо контекст заявки.
     workInput.value = workName;
+    workIdInput.value = workId;
     modeInput.value = next;
     priceInput.value = '';
     currencyInput.value = currencyForMode();
@@ -199,14 +224,22 @@ function init(): void {
   }
 
   /** Закриває форму і повертає фокус на кнопку, з якої відкрили. */
+  function clearReturnUrl(): void {
+    if (!currentReturnToken()) return;
+    history.replaceState(history.state, '', removeReturnToken(window.location.href));
+  }
+
   function close(): void {
     if (mode === null) return;
+    clearOrderReturn();
+    clearReturnUrl();
     mode = null;
     modal.classList.remove('is-open');
     modal.setAttribute('aria-hidden', 'true');
     document.documentElement.classList.remove('scroll-locked');
     trigger?.focus();
     trigger = null;
+    workId = '';
   }
 
   /** Показує повідомлення про помилку (валідація або надсилання). */
@@ -240,18 +273,57 @@ function init(): void {
   // ─── Відкриття: кнопки «Замовити» / «Купити» ────────────────────────────
 
   document.addEventListener('click', (event) => {
-    const target = event.target as Element | null;
-    const card = target?.closest<HTMLElement>('[data-work-card]');
-    if (!target || !card) return;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const card = target.closest<HTMLElement>('[data-work-card]');
+    if (!card) return;
     const workName = card.dataset.workName ?? '';
+    const cardWorkId = card.dataset.workId ?? '';
     if (target.closest('[data-order-button]')) {
-      open('order', workName, null);
+      const orderButton = target.closest<HTMLElement>('[data-order-button]');
+      open('order', workName, null, '', { source: orderButton ?? undefined, workId: cardWorkId });
     } else if (target.closest('[data-buy-button]')) {
       const buyButton = target.closest<HTMLElement>('[data-buy-button]');
       const price = buyButton?.dataset.buyPrice ? Number(buyButton.dataset.buyPrice) : null;
       const format = buyButton?.dataset.buyFormat ?? '';
-      if (price !== null && Number.isFinite(price)) open('buy', workName, price, format);
+      if (price !== null && Number.isFinite(price)) {
+        open('buy', workName, price, format, { source: buyButton ?? undefined, workId: cardWorkId });
+      }
     }
+  });
+
+  // ─── Повернення з інформації про рамку ────────────────────────────────────
+
+  function storeReturnContext(): boolean {
+    if (mode === null || !workId || !infoLink) return false;
+    const card = Array.from(document.querySelectorAll<HTMLElement>('[data-work-card]')).find(
+      (item) => item.dataset.workId === workId,
+    );
+    if (!card) return false;
+    const sizeId = sizeInputs.find((input) => input.checked)?.value ?? '';
+    const token = createReturnToken();
+    const state = {
+      version: 1 as const,
+      token,
+      galleryPath: currentPathWithoutReturnToken(),
+      workId,
+      mode,
+      sizeId,
+      pricingRegion,
+      createdAt: Date.now(),
+    };
+    if (!saveOrderReturn(state)) return false;
+
+    const destination = addReturnToken(infoLink.href, token);
+    const galleryUrl = addReturnToken(state.galleryPath, token);
+    history.replaceState(history.state, '', galleryUrl);
+    window.location.assign(destination);
+    return true;
+  }
+
+  infoLink?.addEventListener('click', (event) => {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (storeReturnContext()) event.preventDefault();
   });
 
   // ─── Керування всередині модалки ─────────────────────────────────────────
@@ -281,6 +353,81 @@ function init(): void {
       closeBtn.focus();
     }
   });
+
+  function restoreFromReturn(): void {
+    const token = currentReturnToken();
+    if (!token) return;
+    const state = readOrderReturn(token);
+    if (!state || state.galleryPath !== currentPathWithoutReturnToken()) {
+      clearOrderReturn();
+      history.replaceState(history.state, '', removeReturnToken(window.location.href));
+      return;
+    }
+    const card = Array.from(document.querySelectorAll<HTMLElement>('[data-work-card]')).find(
+      (item) => item.dataset.workId === state.workId,
+    );
+    if (!card) {
+      clearOrderReturn();
+      history.replaceState(history.state, '', removeReturnToken(window.location.href));
+      return;
+    }
+    if (mode !== null) {
+      clearOrderReturn();
+      return;
+    }
+    const workName = card.dataset.workName ?? '';
+    const screen = card.closest<HTMLElement>('[data-work-screen]');
+    const source = card.querySelector<HTMLElement>(
+      state.mode === 'buy' ? '[data-buy-button]' : '[data-order-button]',
+    );
+    if (!workName || !screen || !source) {
+      clearOrderReturn();
+      history.replaceState(history.state, '', removeReturnToken(window.location.href));
+      return;
+    }
+    clearOrderReturn();
+    history.replaceState(history.state, '', removeReturnToken(window.location.href));
+    screen.scrollIntoView({ behavior: 'auto', block: 'start' });
+    requestAnimationFrame(() => {
+      if (state.mode === 'buy') {
+        const price = Number(source.dataset.buyPrice);
+        if (Number.isFinite(price)) {
+          open('buy', workName, price, source.dataset.buyFormat ?? '', {
+            source,
+            workId: state.workId,
+            region: state.pricingRegion,
+          });
+        }
+      } else {
+        open('order', workName, null, '', {
+          source,
+          workId: state.workId,
+          region: state.pricingRegion,
+          sizeId: state.sizeId,
+        });
+      }
+    });
+  }
+
+  let restoreScheduled = false;
+  let restoreAttempted = false;
+  const scheduleRestore = (): void => {
+    if (restoreScheduled || restoreAttempted || !currentReturnToken()) return;
+    restoreScheduled = true;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        restoreScheduled = false;
+        if (restoreAttempted) return;
+        restoreAttempted = true;
+        restoreFromReturn();
+      }),
+    );
+  };
+  if (currentReturnToken()) {
+    if (document.readyState === 'complete') scheduleRestore();
+    else window.addEventListener('load', scheduleRestore, { once: true });
+  }
+  window.addEventListener('pageshow', scheduleRestore);
 
   // Розмір → ціна автоматично.
   form.addEventListener('change', (event) => {
