@@ -17,6 +17,7 @@ export const WORKS_ORDER: string[] = [
   'Elon Musk',
   'Drew Barrymore',
   'Penelope Cruz',
+  'ORDER-black and white',
   'ORDER-Racer',
   'ORDER-Guy',
   'ORDER-Couple',
