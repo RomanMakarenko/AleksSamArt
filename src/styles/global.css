@@ -569,6 +569,7 @@ html.scroll-locked {
   place-items: center;
   width: 100%;
   max-width: min(90vw, 1200px);
+  touch-action: pan-y;
 }
 
 .lightbox__img {

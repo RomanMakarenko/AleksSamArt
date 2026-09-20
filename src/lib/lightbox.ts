@@ -9,7 +9,8 @@
  *  - відкриття за індексом роботи: тригер `[data-open-lightbox]` (рамка картки),
  *    індекс — `data-work-index`; фото = головне + галерея (без порожніх);
  *  - перегляд фото з лічильником «поточне / всього» (формат — зі словника);
- *  - навігацію ←/→ та кнопками (зациклена), плавну появу фото після завантаження;
+ *  - навігацію ←/→, кнопками та свайпом на touch-пристроях (зациклена),
+ *    плавну появу фото після завантаження;
  *  - закриття: Esc, кнопка «×», клік поза зображенням;
  *  - блокування скролу сторінки (клас `scroll-locked` на `<html>`);
  *  - фокус: на відкритті — на кнопку закриття; trap у межах лайтбокса;
@@ -23,6 +24,7 @@ interface LightboxWork {
 /** Елементи лайтбокса (відомо, що присутні — після перевірки в `init`). */
 interface LightboxEls {
   root: HTMLElement;
+  stage: HTMLElement;
   img: HTMLImageElement;
   nameEl: HTMLElement;
   counterEl: HTMLElement;
@@ -36,18 +38,28 @@ function init(): void {
 
   const works = JSON.parse(dataEl.textContent ?? '[]') as LightboxWork[];
 
+  const stage = root.querySelector<HTMLElement>('.lightbox__stage');
   const img = root.querySelector<HTMLImageElement>('[data-lightbox-img]');
   const nameEl = root.querySelector<HTMLElement>('[data-lightbox-name]');
   const counterEl = root.querySelector<HTMLElement>('[data-lightbox-counter]');
   const closeBtn = root.querySelector<HTMLButtonElement>('[data-lightbox-close]');
-  if (!img || !nameEl || !counterEl || !closeBtn) return;
+  if (!stage || !img || !nameEl || !counterEl || !closeBtn) return;
 
-  const els: LightboxEls = { root, img, nameEl, counterEl, closeBtn };
+  const els: LightboxEls = { root, stage, img, nameEl, counterEl, closeBtn };
   const counterFormat = els.root.dataset.counterFormat ?? '{current} / {total}';
 
   let openIndex = -1; // індекс роботи в `works` (порядок екранів)
   let photoIndex = 0; // індекс поточного фото
   let trigger: HTMLElement | null = null; // картка, з якої відкрили лайтбокс
+
+  const SWIPE_THRESHOLD = 48;
+  let swipePointerId: number | null = null;
+  let swipeStartX = 0;
+  let swipeStartY = 0;
+  let swipeInvalid = false;
+  const activeTouchPointers = new Set<number>();
+  let suppressClick = false;
+  let suppressClickTimer: ReturnType<typeof setTimeout> | null = null;
 
   function currentPhotos(): string[] {
     return works[openIndex]?.photos ?? [];
@@ -88,9 +100,25 @@ function init(): void {
     els.closeBtn.focus();
   }
 
+  function resetSwipe(): void {
+    swipePointerId = null;
+    swipeInvalid = false;
+    activeTouchPointers.clear();
+  }
+
+  function suppressNextClick(): void {
+    suppressClick = true;
+    if (suppressClickTimer !== null) clearTimeout(suppressClickTimer);
+    suppressClickTimer = setTimeout(() => {
+      suppressClick = false;
+      suppressClickTimer = null;
+    }, 500);
+  }
+
   /** Закриває лайтбокс і повертає фокус на картку. */
   function close(): void {
     if (openIndex === -1) return;
+    resetSwipe();
     openIndex = -1;
     els.root.classList.remove('is-open');
     els.root.setAttribute('aria-hidden', 'true');
@@ -105,6 +133,20 @@ function init(): void {
     if (photos.length === 0) return;
     photoIndex = (photoIndex + delta + photos.length) % photos.length;
     render();
+  }
+
+  /** Обробляє горизонтальний свайп на touch-пристрої. */
+  function handleSwipeEnd(event: PointerEvent): void {
+    if (swipePointerId !== event.pointerId) return;
+
+    const dx = event.clientX - swipeStartX;
+    const dy = event.clientY - swipeStartY;
+    const isHorizontal = Math.abs(dx) >= SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.2;
+    if (!swipeInvalid && openIndex !== -1 && isHorizontal) {
+      step(dx < 0 ? 1 : -1);
+      suppressNextClick();
+    }
+    resetSwipe();
   }
 
   /** Tab не виходить за межі лайтбокса (між «×», «←», «→»). */
@@ -148,7 +190,59 @@ function init(): void {
 
   // ─── Керування всередині лайтбокса ──────────────────────────────────────
 
+  els.stage.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'touch' || openIndex === -1) return;
+    activeTouchPointers.add(event.pointerId);
+    if (!event.isPrimary || activeTouchPointers.size > 1) {
+      swipeInvalid = true;
+      return;
+    }
+    if ((event.target as Element).closest('button')) {
+      activeTouchPointers.delete(event.pointerId);
+      return;
+    }
+
+    swipePointerId = event.pointerId;
+    swipeStartX = event.clientX;
+    swipeStartY = event.clientY;
+    swipeInvalid = false;
+    els.stage.setPointerCapture(event.pointerId);
+  });
+
+  els.stage.addEventListener('pointermove', (event) => {
+    if (swipePointerId !== event.pointerId) return;
+    if (!event.isPrimary) swipeInvalid = true;
+  });
+
+  els.stage.addEventListener('pointerup', (event) => {
+    handleSwipeEnd(event);
+    activeTouchPointers.delete(event.pointerId);
+    if (els.stage.hasPointerCapture(event.pointerId)) {
+      els.stage.releasePointerCapture(event.pointerId);
+    }
+  });
+
+  els.stage.addEventListener('pointercancel', (event) => {
+    activeTouchPointers.delete(event.pointerId);
+    if (swipePointerId === event.pointerId) resetSwipe();
+  });
+
+  els.stage.addEventListener('lostpointercapture', (event) => {
+    activeTouchPointers.delete(event.pointerId);
+    if (swipePointerId === event.pointerId) resetSwipe();
+  });
+
   els.root.addEventListener('click', (event) => {
+    if (suppressClick) {
+      suppressClick = false;
+      if (suppressClickTimer !== null) {
+        clearTimeout(suppressClickTimer);
+        suppressClickTimer = null;
+      }
+      event.preventDefault();
+      return;
+    }
+
     const el = event.target as HTMLElement;
     if (el === els.root) {
       close(); // клік поза зображенням (по підкладці)
