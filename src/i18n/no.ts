@@ -40,6 +40,13 @@ export const no: Dictionary = {
     open: 'Åpne bilder: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Eksempel på innrammet portrett',
+    description: 'Rammen på bildet er kun demonstrativ. Den faktiske rammestilen og listen velges fra det tilgjengelige utvalget.',
+    imageAlt: 'Eksempel på et portrett i en ramme',
+    linkLabel: 'Se et eksempel på et innrammet portrett',
+    backToGallery: 'Tilbake til galleriet',
+  },
   form: {
     orderTitle: 'Bestill et maleri',
     buyTitle: 'Kjøp et kunstverk',

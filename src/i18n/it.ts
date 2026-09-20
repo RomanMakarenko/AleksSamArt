@@ -40,6 +40,13 @@ export const it: Dictionary = {
     open: 'Apri le foto: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Esempio di ritratto incorniciato',
+    description: 'La cornice mostrata nell’immagine è dimostrativa. Lo stile e il listello della cornice vengono scelti dall’assortimento disponibile.',
+    imageAlt: 'Esempio di un ritratto presentato in una cornice',
+    linkLabel: 'Visualizza un esempio di ritratto incorniciato',
+    backToGallery: 'Torna alla galleria',
+  },
   form: {
     orderTitle: 'Ordina un quadro',
     buyTitle: 'Acquista un’opera',

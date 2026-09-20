@@ -40,6 +40,13 @@ export const sv: Dictionary = {
     open: 'Öppna foton: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Exempel på ett inramat porträtt',
+    description: 'Ramen på bilden är endast demonstrativ. Den faktiska ramstilen och listen väljs från det tillgängliga sortimentet.',
+    imageAlt: 'Exempel på ett porträtt i en ram',
+    linkLabel: 'Se ett exempel på ett inramat porträtt',
+    backToGallery: 'Tillbaka till galleriet',
+  },
   form: {
     orderTitle: 'Beställ en tavla',
     buyTitle: 'Köp ett konstverk',

@@ -40,6 +40,13 @@ export const es: Dictionary = {
     open: 'Abrir fotos: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Ejemplo de retrato enmarcado',
+    description: 'El marco de la imagen es solo demostrativo. El estilo y la moldura se eligen del surtido disponible.',
+    imageAlt: 'Ejemplo de un retrato presentado en un marco',
+    linkLabel: 'Ver un ejemplo de retrato enmarcado',
+    backToGallery: 'Volver a la galería',
+  },
   form: {
     orderTitle: 'Encargar un cuadro',
     buyTitle: 'Comprar una obra',

@@ -40,6 +40,13 @@ export const en: Dictionary = {
     open: 'Open photos: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Framed portrait example',
+    description: 'The frame shown in the image is for demonstration. The actual frame style and moulding are selected from the available assortment.',
+    imageAlt: 'Example of a portrait presented in a frame',
+    linkLabel: 'View an example of the framed portrait',
+    backToGallery: 'Back to gallery',
+  },
   form: {
     orderTitle: 'Order a painting',
     buyTitle: 'Buy an artwork',

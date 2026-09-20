@@ -19,14 +19,16 @@
  * скрипт через `data-*` атрибути (як `data-counter-format` у лайтбоксі).
  * Клієнтська логіка — `src/lib/order-form.ts` (підключена внизу).
  */
-import type { Dictionary } from '../i18n';
+import type { Dictionary, Locale } from '../i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { ARTWORK_CURRENCY, ORDER_PRICES, ORDER_SIZES, CUSTOM_SIZE_ID } from '../config/site';
 
 interface Props {
   t: Dictionary;
+  lang: Locale;
 }
 
-const { t } = Astro.props;
+const { t, lang } = Astro.props;
 
 // За замовчуванням вибраний перший розмір зі списку (A4).
 const defaultSizeId = ORDER_SIZES[0]?.id ?? '';
@@ -144,7 +146,20 @@ const currencyByRegion = { ua: 'UAH', international: 'EUR' } as const;
       </div>
 
       <div class="order-form__notes" role="note">
-        <p>{t.form.orderNotes.framing}</p>
+        <p class="order-form__framing-note">
+          <span>{t.form.orderNotes.framing}</span>
+          <a
+            class="order-form__info-link"
+            href={getRelativeLocaleUrl(lang, 'info')}
+            aria-label={t.frameInfo.linkLabel}
+            title={t.frameInfo.linkLabel}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 10.5v6M12 7.5h.01" />
+            </svg>
+          </a>
+        </p>
         <p data-order-timing>{t.form.orderNotes.timing}</p>
         <p>{t.form.orderNotes.shipping}</p>
       </div>

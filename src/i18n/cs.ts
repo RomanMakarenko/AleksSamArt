@@ -40,6 +40,13 @@ export const cs: Dictionary = {
     open: 'Otevřít fotky: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Příklad portrétu v rámu',
+    description: 'Rám na obrázku je pouze demonstrativní. Skutečný typ rámu a lišta se vybírají z dostupného sortimentu.',
+    imageAlt: 'Příklad portrétu umístěného v rámu',
+    linkLabel: 'Prohlédnout příklad portrétu v rámu',
+    backToGallery: 'Zpět do galerie',
+  },
   form: {
     orderTitle: 'Objednat obraz',
     buyTitle: 'Koupit dílo',

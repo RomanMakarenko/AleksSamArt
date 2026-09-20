@@ -40,6 +40,13 @@ export const pl: Dictionary = {
     open: 'Otwórz zdjęcia: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Przykład portretu w ramie',
+    description: 'Rama widoczna na zdjęciu ma charakter demonstracyjny. Rzeczywisty rodzaj ramy i listwa są wybierane z dostępnego asortymentu.',
+    imageAlt: 'Przykład portretu przedstawionego w ramie',
+    linkLabel: 'Zobacz przykład portretu w ramie',
+    backToGallery: 'Wróć do galerii',
+  },
   form: {
     orderTitle: 'Zamów obraz',
     buyTitle: 'Kup dzieło',

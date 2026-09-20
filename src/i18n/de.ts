@@ -40,6 +40,13 @@ export const de: Dictionary = {
     open: 'Fotos öffnen: {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Beispiel eines gerahmten Porträts',
+    description: 'Der auf dem Bild gezeigte Rahmen dient nur zur Veranschaulichung. Rahmenart und Leiste werden aus dem verfügbaren Sortiment ausgewählt.',
+    imageAlt: 'Beispiel eines gerahmten Porträts',
+    linkLabel: 'Beispiel für ein gerahmtes Porträt ansehen',
+    backToGallery: 'Zurück zur Galerie',
+  },
   form: {
     orderTitle: 'Ein Gemälde bestellen',
     buyTitle: 'Ein Kunstwerk kaufen',

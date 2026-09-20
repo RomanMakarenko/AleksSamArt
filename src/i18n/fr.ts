@@ -40,6 +40,13 @@ export const fr: Dictionary = {
     open: 'Ouvrir les photos : {work}',
     counter: '{current} / {total}',
   },
+  frameInfo: {
+    title: 'Exemple de portrait encadré',
+    description: 'Le cadre présenté sur l’image est donné à titre indicatif. Le style et la baguette du cadre sont choisis parmi l’assortiment disponible.',
+    imageAlt: 'Exemple d’un portrait présenté dans un cadre',
+    linkLabel: 'Voir un exemple de portrait encadré',
+    backToGallery: 'Retour à la galerie',
+  },
   form: {
     orderTitle: 'Commander un tableau',
     buyTitle: 'Acheter une œuvre',

@@ -53,6 +53,14 @@ export interface Dictionary {
     /** Лічильник фото: «{current} / {total}» */
     counter: string;
   };
+  /** Приклад портрета в рамці */
+  frameInfo: {
+    title: string;
+    description: string;
+    imageAlt: string;
+    linkLabel: string;
+    backToGallery: string;
+  };
   /** Форма «Замовити»/«Купити» (етап 5) */
   form: {
     orderTitle: string;
